@@ -1,6 +1,7 @@
 // This has been adapted from the Vulkan tutorial
 
 #include "Starter.hpp"
+#include "Camera.hpp"
 
 // The uniform buffer objects data structures
 // Remember to use the correct alignas(...) value
@@ -35,9 +36,6 @@ const int num_balls = 3;
 class MeshLoader : public BaseProject {
 protected:
     
-    // Current aspect ratio (used by the callback that resized the window
-    float Ar;
-    
     // Descriptor Layouts ["classes" of what will be passed to the shaders]
     DescriptorSetLayout DSL;
     
@@ -61,7 +59,7 @@ protected:
     
     // Other application parameters
     Ball balls[num_balls];
-    
+    Camera camera;
     // Here you set the main application parameters
     void setWindowParameters() {
         // window size, titile and initial background
@@ -76,12 +74,12 @@ protected:
         texturesInPool = 6 + num_balls;
         setsInPool = 5 + num_balls;
         
-        Ar = (float)windowWidth / (float)windowHeight;
+        camera.aspectRatio = (float)windowWidth / (float)windowHeight;
     }
     
     // What to do when the window changes size
     void onWindowResize(int w, int h) {
-        Ar = (float)w / (float)h;
+        camera.aspectRatio = (float)w / (float)h;
     }
     
     // Here you load and setup all your Vulkan Models and Texutures.
@@ -171,6 +169,7 @@ protected:
         // Init local variables
         
         initBallPositions();
+        initCamera(camera);
     }
     
     void initBallPositions() {
@@ -217,7 +216,6 @@ protected:
                 {0, UNIFORM, sizeof(UniformBlock), nullptr},
                 {1, TEXTURE, 0, &T2}
             });
-            std::cout << "helo";
         }
 	}
 
@@ -326,12 +324,11 @@ protected:
 		if(glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
-		
-		// Integration with the timers and the controllers
-		float deltaT;
-		glm::vec3 m = glm::vec3(0.0f), r = glm::vec3(0.0f);
-		bool fire = false;
-		getSixAxis(deltaT, m, r, fire);
+        
+        Input input;
+        getSixAxis(input.deltaT, input.m, input.r, input.fire);
+        
+        updateCamera(camera, input);
 		// getSixAxis() is defined in Starter.hpp in the base class.
 		// It fills the float point variable passed in its first parameter with the time
 		// since the last call to the procedure.
@@ -342,48 +339,36 @@ protected:
 		// If fills the last boolean variable with true if fire has been pressed:
 		//          SPACE on the keyboard, A or B button on the Gamepad, Right mouse button
 
-		
-		// Parameters
-		// Camera FOV-y, Near Plane and Far Plane
-		const float FOVy = glm::radians(90.0f);
-		const float nearPlane = 0.1f;
-		const float farPlane = 100.0f;
-		
-		glm::mat4 Prj = glm::perspective(FOVy, Ar, nearPlane, farPlane);
-		Prj[1][1] *= -1;
-		glm::vec3 camTarget = glm::vec3(0,0,0);
-		glm::vec3 camPos    = camTarget + glm::vec3(6,3,10) / 2.0f;
-		glm::mat4 View = glm::lookAt(camPos, camTarget, glm::vec3(0,1,0));
-
-
+        glm::mat4 ViewProjection = computeViewProjectionMatrix(camera);
+        
 		glm::mat4 World;
 
 		World = glm::translate(glm::mat4(1), glm::vec3(-3, 0, 0)); // cube
-		ubo1.mvpMat = Prj * View * World;
+		ubo1.mvpMat = ViewProjection * World;
 		DS1.map(currentImage, &ubo1, sizeof(ubo1), 0);
 		// the .map() method of a DataSet object, requires the current image of the swap chain as first parameter
 		// the second parameter is the pointer to the C++ data structure to transfer to the GPU
 		// the third parameter is its size
 		// the fourth parameter is the location inside the descriptor set of this uniform block
 		World = glm::translate(glm::mat4(1), glm::vec3(3, 0, 0)); // sphere
-		ubo2.mvpMat = Prj * View * World;
+		ubo2.mvpMat = ViewProjection * World;
 		DS2.map(currentImage, &ubo2, sizeof(ubo2), 0);
 		
 		World = glm::scale(glm::mat4(1), glm::vec3(10.0f)); // dish
-		ubo3.mvpMat = Prj * View * World;
+		ubo3.mvpMat = ViewProjection * World;
 		DS3.map(currentImage, &ubo3, sizeof(ubo3), 0);
 
 		World = glm::translate(glm::mat4(1), glm::vec3(0, -5, 0)) * // rectangle
 				glm::scale(glm::mat4(1), glm::vec3(5.0f));
-		ubo4.mvpMat = Prj * View * World;
+		ubo4.mvpMat = ViewProjection * World;
 		DS4.map(currentImage, &ubo4, sizeof(ubo4), 0);
         
-        uboTable.mvpMat = Prj * View * World;
+        uboTable.mvpMat = ViewProjection * World;
         DSTable.map(currentImage, &uboTable, sizeof(uboTable), 0);
         
         for (auto &ball : balls) {
             World = glm::translate(glm::mat4(1), ball.pos) * glm::scale(glm::mat4(1), glm::vec3(0.2));
-            ball.ubo.mvpMat = Prj * View * World;
+            ball.ubo.mvpMat = ViewProjection * World;
             ball.descriptorSet.map(currentImage, &ball.ubo, sizeof(ball.ubo), 0);
         }
 	}

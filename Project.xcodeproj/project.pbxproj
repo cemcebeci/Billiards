@@ -13,6 +13,7 @@
 		E82228E82B50537B005E7203 /* libvulkan.1.3.239.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = E82228E42B505366005E7203 /* libvulkan.1.3.239.dylib */; };
 		E82228E92B50537B005E7203 /* libvulkan.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = E82228E52B505366005E7203 /* libvulkan.1.dylib */; };
 		E82228EA2B50537B005E7203 /* libglfw.3.3.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = E82228E22B505343005E7203 /* libglfw.3.3.dylib */; };
+		E828E2F62B5834E000F5A42D /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E828E2F42B5834E000F5A42D /* Camera.cpp */; };
 		E887B1422B56DCEC00A1C372 /* glm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E887B0792B56DCEA00A1C372 /* glm.cpp */; };
 		E887B1432B56DCEC00A1C372 /* MeshLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E887B1412B56DCEC00A1C372 /* MeshLoader.cpp */; };
 		E887B1472B56ED0500A1C372 /* Ball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E887B1462B56ED0500A1C372 /* Ball.cpp */; };
@@ -38,6 +39,10 @@
 		E82228E22B505343005E7203 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		E82228E42B505366005E7203 /* libvulkan.1.3.239.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvulkan.1.3.239.dylib; path = ../../VulkanSDK/1.3.239.0/macOS/lib/libvulkan.1.3.239.dylib; sourceTree = "<group>"; };
 		E82228E52B505366005E7203 /* libvulkan.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvulkan.1.dylib; path = ../../VulkanSDK/1.3.239.0/macOS/lib/libvulkan.1.dylib; sourceTree = "<group>"; };
+		E828E2F42B5834E000F5A42D /* Camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		E828E2F72B597FC900F5A42D /* GameLogic.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameLogic.hpp; sourceTree = "<group>"; };
+		E828E2F82B5991EE00F5A42D /* Camera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
+		E828E2F92B59925200F5A42D /* Input.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Input.hpp; sourceTree = "<group>"; };
 		E887AFB82B56DCE800A1C372 /* Checker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Checker.png; sourceTree = "<group>"; };
 		E887AFB92B56DCE800A1C372 /* Textures_Food.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Textures_Food.png; sourceTree = "<group>"; };
 		E887AFBB2B56DCEA00A1C372 /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
@@ -445,6 +450,10 @@
 		E82228CE2B50523F005E7203 = {
 			isa = PBXGroup;
 			children = (
+				E828E2F92B59925200F5A42D /* Input.hpp */,
+				E828E2F72B597FC900F5A42D /* GameLogic.hpp */,
+				E828E2F42B5834E000F5A42D /* Camera.cpp */,
+				E828E2F82B5991EE00F5A42D /* Camera.hpp */,
 				E887B1462B56ED0500A1C372 /* Ball.cpp */,
 				E887AFBA2B56DCEA00A1C372 /* headers */,
 				E887B1412B56DCEC00A1C372 /* MeshLoader.cpp */,
@@ -993,6 +1002,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E828E2F62B5834E000F5A42D /* Camera.cpp in Sources */,
 				E887B1472B56ED0500A1C372 /* Ball.cpp in Sources */,
 				E887B1432B56DCEC00A1C372 /* MeshLoader.cpp in Sources */,
 				E887B1422B56DCEC00A1C372 /* glm.cpp in Sources */,
