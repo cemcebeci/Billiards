@@ -2,6 +2,7 @@
 
 #include "Starter.hpp"
 #include "Camera.hpp"
+#include "GameLogic.hpp"
 
 // The uniform buffer objects data structures
 // Remember to use the correct alignas(...) value
@@ -23,14 +24,12 @@ struct Vertex {
 	glm::vec2 UV;
 };
 
-struct Ball {
+struct BallObject {
     Model<Vertex> model;
     DescriptorSet descriptorSet;
     UniformBlock ubo;
     glm::vec3 pos;
 };
-
-const int num_balls = 3;
 
 // MAIN ! 
 class MeshLoader : public BaseProject {
@@ -58,8 +57,9 @@ protected:
     UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable;
     
     // Other application parameters
-    Ball balls[num_balls];
+    BallObject balls[NUM_BALLS];
     Camera camera;
+    GameLogic gameLogic;
     // Here you set the main application parameters
     void setWindowParameters() {
         // window size, titile and initial background
@@ -70,9 +70,9 @@ protected:
         initialBackgroundColor = {0.0f, 0.005f, 0.01f, 1.0f};
         
         // Descriptor pool sizes
-        uniformBlocksInPool = 5 + num_balls;
-        texturesInPool = 6 + num_balls;
-        setsInPool = 5 + num_balls;
+        uniformBlocksInPool = 5 + NUM_BALLS;
+        texturesInPool = 6 + NUM_BALLS;
+        setsInPool = 5 + NUM_BALLS;
         
         camera.aspectRatio = (float)windowWidth / (float)windowHeight;
     }
@@ -167,17 +167,10 @@ protected:
         TFurniture.init(this, "textures/Textures_Forniture.png");
         
         // Init local variables
-        
-        initBallPositions();
         initCamera(camera);
+        gameLogic.initBalls();
     }
     
-    void initBallPositions() {
-        balls[0].pos = glm::vec3(5, 0, 0);
-        balls[1].pos = glm::vec3(5, -1, 0);
-        balls[1].pos = glm::vec3(5, -2, 0);
-    }
-	
 	// Here you create your pipelines and Descriptor Sets!
 	void pipelinesAndDescriptorSetsInit() {
 		// This creates a new pipeline (with the current surface), using its shaders
@@ -363,13 +356,15 @@ protected:
 		ubo4.mvpMat = ViewProjection * World;
 		DS4.map(currentImage, &ubo4, sizeof(ubo4), 0);
         
+        World = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0)) * // rectangle
+                glm::scale(glm::mat4(1), glm::vec3(5.0f));
         uboTable.mvpMat = ViewProjection * World;
         DSTable.map(currentImage, &uboTable, sizeof(uboTable), 0);
         
-        for (auto &ball : balls) {
-            World = glm::translate(glm::mat4(1), ball.pos) * glm::scale(glm::mat4(1), glm::vec3(0.2));
-            ball.ubo.mvpMat = ViewProjection * World;
-            ball.descriptorSet.map(currentImage, &ball.ubo, sizeof(ball.ubo), 0);
+        for (int i = 0; i < NUM_BALLS; i++) {
+            BallObject &obj = balls[i];
+            obj.ubo.mvpMat = ViewProjection * gameLogic.getBall(i).computeWorldMatrix();
+            obj.descriptorSet.map(currentImage, &obj.ubo, sizeof(obj.ubo), 0);
         }
 	}
 };
