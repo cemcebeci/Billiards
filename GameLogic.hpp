@@ -5,16 +5,20 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Input.hpp"
 
 const int NUM_BALLS = 3;
-const float BALL_HEIGHT = 1.55;
-const float BALL_SCALE = 0.2;
+const float BALL_HEIGHT = 1.35;
+const float BALL_SCALE = 0.5;
+const float FRICTION_FACTOR = 0.2;
 struct Ball
 {
     glm::vec2 position;
+    glm::vec2 velocity = glm::vec2(0);
+    float radius = 1; // in logical units.
     
     glm::mat4 computeWorldMatrix() {
-        return glm::translate(glm::mat4(1), glm::vec3(position.x, BALL_HEIGHT, position.y)) * glm::scale(glm::mat4(1), glm::vec3(BALL_SCALE));
+        return glm::translate(glm::mat4(1), glm::vec3(position.x / 2, BALL_HEIGHT, -position.y / 2)) * glm::scale(glm::mat4(1), glm::vec3(BALL_SCALE * radius));
     }
 };
 
@@ -22,7 +26,14 @@ class GameLogic {
 public:
     void initBalls();
     Ball getBall(int index) {return balls[index];}
+    void updateGame(Input input);
+    
+    
 private:
     Ball balls[NUM_BALLS];
+    void computeFrame(float deltaT);
+    
+    // testing
+    void setRandomBallVelocities();
 };
 

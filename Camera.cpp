@@ -1,10 +1,10 @@
 #include "Camera.hpp"
 
 void initCamera(Camera &camera) {
-    camera.position = glm::vec3(6,3,10);
+    camera.position = glm::vec3(0,10,0);
     camera.aspectRatio = 1;
     camera.roll = 0;
-    camera.pitch = 0;
+    camera.pitch = glm::radians(-90.0f);
     camera.yaw = 0;
 }
 

@@ -322,6 +322,8 @@ protected:
         getSixAxis(input.deltaT, input.m, input.r, input.fire);
         
         updateCamera(camera, input);
+        gameLogic.updateGame(input);
+        
 		// getSixAxis() is defined in Starter.hpp in the base class.
 		// It fills the float point variable passed in its first parameter with the time
 		// since the last call to the procedure.
@@ -356,8 +358,8 @@ protected:
 		ubo4.mvpMat = ViewProjection * World;
 		DS4.map(currentImage, &ubo4, sizeof(ubo4), 0);
         
-        World = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0)) * // rectangle
-                glm::scale(glm::mat4(1), glm::vec3(5.0f));
+        World = glm::translate(glm::mat4(1), glm::vec3(0, -1, 0)) * // rectangle
+                glm::scale(glm::mat4(1), glm::vec3(7.0f));
         uboTable.mvpMat = ViewProjection * World;
         DSTable.map(currentImage, &uboTable, sizeof(uboTable), 0);
         
