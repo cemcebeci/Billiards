@@ -17,6 +17,14 @@ void GameLogic::initBalls() {
     balls[2].position = glm::vec2(2, 0);
 }
 
+bool GameLogic::allBallsAreStill() {
+    for(auto &ball : balls) {
+        if(ball.velocity.x != 0.0f || ball.velocity.y != 0.0f)
+            return false;
+    }
+    return true;
+}
+
 void GameLogic::updateGame(Input input) {
     if(aiming) {
         if(!charging) {
@@ -24,7 +32,6 @@ void GameLogic::updateGame(Input input) {
                 chargeTime = 0.0f;
                 charging = true;
             } else { // picking direction.
-                std::cout << input.r.x;
                 direction +=  input.r.x + input.deltaT * ROTATE_SPEED;
                 if (direction > 360.0f)
                     direction -= 360.0f;
@@ -37,13 +44,16 @@ void GameLogic::updateGame(Input input) {
                 chargeTime += input.deltaT;
             } else {    // released
                 charging = false;
-                std::cout << chargeTime;
                 balls[0].velocity = glm::vec2(cos(glm::radians(direction)), sin(glm::radians(direction))) * chargeTime * HIT_STRENGTH;
                 aiming = false;
+                chargeTime = 0.0f;
             }
         }
     } else {
         computeFrame(input.deltaT);
+        if( allBallsAreStill()) {
+            aiming = true;
+        }
     }
 }
 
@@ -118,6 +128,9 @@ void GameLogic::computeFrame(float deltaT) {
 }
 
 glm::mat4 GameLogic::computeArrowWorldMatrix() {
+    if(!aiming)
+        return glm::scale(glm::mat4(1), glm::vec3(0,0,0));
+    
     return balls[0].computeTranslationMatrix() // move it next to the ball.
     * glm::rotate(glm::mat4(1), glm::radians(direction), glm::vec3(0,1,0)) // rotate around origin
     * glm::scale(glm::mat4(1), glm::vec3(1.0f + fmaxf(0, chargeTime * ARROW_ELONGATE_FACTOR), 1, 1)) // scale horizontally based on charge time.

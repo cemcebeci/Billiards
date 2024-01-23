@@ -10,7 +10,7 @@
 const int NUM_BALLS = 3;
 const float BALL_HEIGHT = 1.35;
 const float BALL_SCALE = 0.5;
-const float FRICTION_FACTOR = 0.2;
+const float FRICTION_FACTOR = 1;
 const float HIT_STRENGTH = 5.0f;
 const float ROTATE_SPEED = 1.0f;
 const float ARROW_DISTANCE = 1.5f;
@@ -45,6 +45,7 @@ private:
     float direction = 0.0f;
     float chargeTime;
     void computeFrame(float deltaT);
+    bool allBallsAreStill();
     
     // testing
     void setRandomBallVelocities();
