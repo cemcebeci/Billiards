@@ -51,7 +51,7 @@ protected:
     // Descriptor sets
     DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSArrow;
     // Textures
-    Texture T1, T2, TFurniture, TDungeon;
+    Texture T1, T2, TFurniture, TDungeon, TBall;
     
     // C++ storage for uniform variables
     UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable, uboArrow;
@@ -157,7 +157,7 @@ protected:
         
         MTable.init(this, &VD, "models/billiardtable-TurboSquid.obj", OBJ);
         for (auto &ball : balls) {
-            ball.model.init(this, &VD, "Models/Sphere.gltf", GLTF);
+            ball.model.init(this, &VD, "Models/ball.obj", OBJ);
         }
         MArrow.init(this, &VD, "models/log_Mesh.965.mgcg", MGCG);
         
@@ -167,6 +167,8 @@ protected:
         T2.init(this,   "textures/Textures_Food.png");
         TFurniture.init(this, "textures/Table.png");
         TDungeon.init(this, "textures/Textures_Dungeon.png");
+        TBall.init(this, "textures/ball_8.png");
+
         
         // Init local variables
         initCamera(camera);
@@ -213,7 +215,7 @@ protected:
         for(auto &ball : balls) {
             ball.descriptorSet.init(this, &DSL, {
                 {0, UNIFORM, sizeof(UniformBlock), nullptr},
-                {1, TEXTURE, 0, &T2}
+                {1, TEXTURE, 0, &TBall}
             });
         }
 	}

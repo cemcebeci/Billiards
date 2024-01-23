@@ -13,7 +13,7 @@ const float TABLE_RIGHT_EDGE = 16.5;
 
 void GameLogic::initBalls() {
     balls[0].position = glm::vec2(-2, 1);
-    balls[1].position = glm::vec2(5, 4);
+    balls[1].position = glm::vec2(2, 2);
     balls[2].position = glm::vec2(2, 0);
 }
 
@@ -32,7 +32,7 @@ void GameLogic::updateGame(Input input) {
                 chargeTime = 0.0f;
                 charging = true;
             } else { // picking direction.
-                direction +=  input.r.z + input.deltaT * ROTATE_SPEED;
+                direction -=  input.r.z + input.deltaT * ROTATE_SPEED;
                 if (direction > 360.0f)
                     direction -= 360.0f;
                 if(direction < 0.0f)
@@ -132,8 +132,7 @@ glm::mat4 GameLogic::computeArrowWorldMatrix() {
     
     return balls[0].computeTranslationMatrix() // move it next to the ball.
     * glm::rotate(glm::mat4(1), glm::radians(direction), glm::vec3(0,1,0)) // rotate around origin
-    * glm::scale(glm::mat4(1), glm::vec3(1.0f + fmaxf(0, chargeTime * ARROW_ELONGATE_FACTOR), 1, 1)) // scale horizontally based on charge time.
-    * glm::translate(glm::mat4(1), glm::vec3(-ARROW_DISTANCE, 0, 0))    // move it away from the origin
+    * glm::translate(glm::mat4(1), glm::vec3(-(ARROW_DISTANCE + chargeTime * ARROW_ELONGATE_FACTOR), 0, 0))    // move it away from the origin
     * glm::rotate(glm::mat4(1), glm::radians(90.0f), glm::vec3(0,1,0)); // orient the arrow horizontally.
 }
 

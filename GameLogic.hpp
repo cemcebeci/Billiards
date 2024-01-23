@@ -9,7 +9,7 @@
 
 const int NUM_BALLS = 3;
 const float BALL_HEIGHT = 0.0f;
-const float BALL_SCALE = 0.5;
+const float BALL_SCALE = 0.4;
 const float FRICTION_FACTOR = 1;
 const float HIT_STRENGTH = 5.0f;
 const float ROTATE_SPEED = 1.0f;
