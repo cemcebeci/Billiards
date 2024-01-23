@@ -155,7 +155,7 @@ protected:
         M4.indices = {0, 1, 2,    1, 3, 2};
         M4.initMesh(this, &VD);
         
-        MTable.init(this, &VD, "models/coffee_table_019_Mesh.6459.mgcg", MGCG);
+        MTable.init(this, &VD, "models/billiardtable-TurboSquid.obj", OBJ);
         for (auto &ball : balls) {
             ball.model.init(this, &VD, "Models/Sphere.gltf", GLTF);
         }
@@ -165,7 +165,7 @@ protected:
         // The second parameter is the file name
         T1.init(this,   "textures/Checker.png");
         T2.init(this,   "textures/Textures_Food.png");
-        TFurniture.init(this, "textures/Textures_Forniture.png");
+        TFurniture.init(this, "textures/Table.png");
         TDungeon.init(this, "textures/Textures_Dungeon.png");
         
         // Init local variables
@@ -350,22 +350,23 @@ protected:
         
 		glm::mat4 World;
 
-		World = glm::translate(glm::mat4(1), glm::vec3(-3, 0, 0)); // cube
+        
+		World = glm::scale(glm::mat4(1), glm::vec3(0,0,0)) * glm::translate(glm::mat4(1), glm::vec3(-3, 0, 0)); // cube
 		ubo1.mvpMat = ViewProjection * World;
 		DS1.map(currentImage, &ubo1, sizeof(ubo1), 0);
 		// the .map() method of a DataSet object, requires the current image of the swap chain as first parameter
 		// the second parameter is the pointer to the C++ data structure to transfer to the GPU
 		// the third parameter is its size
 		// the fourth parameter is the location inside the descriptor set of this uniform block
-		World = glm::translate(glm::mat4(1), glm::vec3(3, 0, 0)); // sphere
+		World = glm::scale(glm::mat4(1), glm::vec3(0,0,0)) * glm::translate(glm::mat4(1), glm::vec3(3, 0, 0)); // sphere
 		ubo2.mvpMat = ViewProjection * World;
 		DS2.map(currentImage, &ubo2, sizeof(ubo2), 0);
 		
-		World = glm::scale(glm::mat4(1), glm::vec3(10.0f)); // dish
+		World = glm::scale(glm::mat4(1), glm::vec3(0,0,0)) * glm::scale(glm::mat4(1), glm::vec3(10.0f)); // dish
 		ubo3.mvpMat = ViewProjection * World;
 		DS3.map(currentImage, &ubo3, sizeof(ubo3), 0);
 
-		World = glm::translate(glm::mat4(1), glm::vec3(0, -5, 0)) * // rectangle
+		World = glm::scale(glm::mat4(1), glm::vec3(0,0,0)) * glm::translate(glm::mat4(1), glm::vec3(0, -5, 0)) * // rectangle
 				glm::scale(glm::mat4(1), glm::vec3(5.0f));
 		ubo4.mvpMat = ViewProjection * World;
 		DS4.map(currentImage, &ubo4, sizeof(ubo4), 0);

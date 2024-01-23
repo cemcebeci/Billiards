@@ -20,9 +20,9 @@ void updateCamera(Camera &camera, Input &input) {
     camera.position += uz * input.m.z * CAMERA_MOVE_SPEED * input.deltaT;
     
     // Update the camera's orientation
-    camera.roll += input.r.z * CAMERA_ROTATE_SPEED * input.deltaT;
     // DISABLED FOR NOW.
-    // camera.pitch -= input.r.x * CAMERA_ROTATE_SPEED * input.deltaT;
+    // camera.roll += input.r.z * CAMERA_ROTATE_SPEED * input.deltaT;
+    camera.pitch -= input.r.x * CAMERA_ROTATE_SPEED * input.deltaT;
     camera.yaw -= input.r.y * CAMERA_ROTATE_SPEED * input.deltaT;
 }
 

@@ -6,10 +6,10 @@
     The table is 20x10, occupying the space between (-5, -10) and (5, 10).
     A ball's position denotes the position of its centre.
  */
-const float TABLE_BOTTOM_EDGE = -10;
-const float TABLE_TOP_EDGE = 10;
-const float TABLE_LEFT_EDGE = -5;
-const float TABLE_RIGHT_EDGE = 5;
+const float TABLE_BOTTOM_EDGE = -9.5;
+const float TABLE_TOP_EDGE = 9.5;
+const float TABLE_LEFT_EDGE = -16.5;
+const float TABLE_RIGHT_EDGE = 16.5;
 
 void GameLogic::initBalls() {
     balls[0].position = glm::vec2(-2, 1);
@@ -32,7 +32,7 @@ void GameLogic::updateGame(Input input) {
                 chargeTime = 0.0f;
                 charging = true;
             } else { // picking direction.
-                direction +=  input.r.x + input.deltaT * ROTATE_SPEED;
+                direction +=  input.r.z + input.deltaT * ROTATE_SPEED;
                 if (direction > 360.0f)
                     direction -= 360.0f;
                 if(direction < 0.0f)
@@ -115,7 +115,6 @@ void GameLogic::computeFrame(float deltaT) {
             if(ball.velocity.x * newVelocity.x < 0.0f || ball.velocity.y * newVelocity.y < 0.0f)
                 ball.velocity = glm::vec2(0);
             else
-                
                 ball.velocity = newVelocity;
         }
     }
