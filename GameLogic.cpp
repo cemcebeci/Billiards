@@ -1,4 +1,5 @@
 #include "GameLogic.hpp"
+#include <iostream>
 
 /*
     In the logical plane, every ball has a diameter of 1 unit.
@@ -11,17 +12,39 @@ const float TABLE_LEFT_EDGE = -5;
 const float TABLE_RIGHT_EDGE = 5;
 
 void GameLogic::initBalls() {
-    balls[0].position = glm::vec2(5, 5);
-    balls[1].position = glm::vec2(-2, 1);
+    balls[0].position = glm::vec2(-2, 1);
+    balls[1].position = glm::vec2(5, 4);
     balls[2].position = glm::vec2(2, 0);
-    balls[1].velocity = glm::vec2(2, 0);
 }
 
 void GameLogic::updateGame(Input input) {
-    if(input.fire) // to test easily.
-        setRandomBallVelocities();
-    
-    computeFrame(input.deltaT);
+    if(aiming) {
+        if(!charging) {
+            if(input.fire) { // started charging.
+                chargeTime = 0.0f;
+                charging = true;
+            } else { // picking direction.
+                std::cout << input.r.x;
+                direction +=  input.r.x + input.deltaT * ROTATE_SPEED;
+                if (direction > 360.0f)
+                    direction -= 360.0f;
+                if(direction < 0.0f)
+                    direction += 360.0f;
+            }
+        }
+        if(charging) {
+            if(input.fire) { // still charging
+                chargeTime += input.deltaT;
+            } else {    // released
+                charging = false;
+                std::cout << chargeTime;
+                balls[0].velocity = glm::vec2(cos(glm::radians(direction)), sin(glm::radians(direction))) * chargeTime * HIT_STRENGTH;
+                aiming = false;
+            }
+        }
+    } else {
+        computeFrame(input.deltaT);
+    }
 }
 
 void handleBallCollision(Ball& b1, Ball&b2) {
@@ -92,6 +115,14 @@ void GameLogic::computeFrame(float deltaT) {
         ball.position += deltaT * ball.velocity;
     }
     
+}
+
+glm::mat4 GameLogic::computeArrowWorldMatrix() {
+    return balls[0].computeTranslationMatrix() // move it next to the ball.
+    * glm::rotate(glm::mat4(1), glm::radians(direction), glm::vec3(0,1,0)) // rotate around origin
+    * glm::scale(glm::mat4(1), glm::vec3(1.0f + fmaxf(0, chargeTime * ARROW_ELONGATE_FACTOR), 1, 1)) // scale horizontally based on charge time.
+    * glm::translate(glm::mat4(1), glm::vec3(-ARROW_DISTANCE, 0, 0))    // move it away from the origin
+    * glm::rotate(glm::mat4(1), glm::radians(90.0f), glm::vec3(0,1,0)); // orient the arrow horizontally.
 }
 
 // --------- Testing
