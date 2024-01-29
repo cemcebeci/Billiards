@@ -14,15 +14,48 @@ const float TABLE_RIGHT_EDGE = 16.5;
 void GameLogic::initBalls() {
     balls[0].position = glm::vec2(-2, 1);
     balls[1].position = glm::vec2(2, 2);
-    balls[2].position = glm::vec2(2, 0);
+    balls[2].position = glm::vec2(2, 5);
+}
+
+void GameLogic::initHoles() {
+    holes[0].position = glm::vec2(-9.5, -16.5);
+    holes[0].radius = 2;
+    holes[1].position = glm::vec2(9.5, -16.5);
+    holes[1].radius = 2;
+    holes[2].position = glm::vec2(-9.5, 16.5);
+    holes[2].radius = 2;
+    holes[3].position = glm::vec2(9.5, 16.5);
+    holes[3].radius = 2;
+    holes[4].position = glm::vec2(-9.5, 0);
+    holes[5].position = glm::vec2(9.5, 0);
 }
 
 bool GameLogic::allBallsAreStill() {
     for(auto &ball : balls) {
-        if(ball.velocity.x != 0.0f || ball.velocity.y != 0.0f)
-            return false;
+        if (ball.inHole != nullptr) {
+            if(ball.animatingFall)
+                return false;
+        } else {
+            if(ball.velocity.x != 0.0f || ball.velocity.y != 0.0f)
+                return false;
+        }
     }
     return true;
+}
+
+void GameLogic::handleScore(Ball& ball, Hole& hole) {
+    ball.inHole = &hole;
+    ball.animatingFall = true;
+}
+
+void GameLogic::checkWhetherAnyBallsGoIn() {
+    for( auto &ball : balls) {
+        for( auto &hole : holes) {
+            if (glm::distance(ball.position, hole.position) < hole.radius) {
+                handleScore(ball, hole);
+            }
+        }
+    }
 }
 
 void GameLogic::updateGame(Input input) {
@@ -50,6 +83,7 @@ void GameLogic::updateGame(Input input) {
             }
         }
     } else {
+        checkWhetherAnyBallsGoIn();
         computeFrame(input.deltaT);
         if( allBallsAreStill()) {
             aiming = true;
@@ -73,10 +107,26 @@ void handleBallCollision(Ball& b1, Ball&b2) {
     b2.velocity = newB2Velocity;
 }
 
+void applyAnimation(Ball& ball, float deltaT) {
+    Hole hole = *ball.inHole;
+    std::cout << glm::distance(ball.position, hole.position) << "\n";
+    if(glm::distance(ball.position, hole.position) > 0.1) {
+        glm::vec2 direction = glm::normalize( hole.position - ball.position);
+        ball.position += direction * deltaT * glm::length(ball.velocity);
+    } else {
+        ball.animatingFall = false;
+        ball.hide = true;
+    }
+        
+}
+
 void GameLogic::computeFrame(float deltaT) {
     
     // check edge collisions
     for(auto &ball : balls) {
+        if(ball.inHole != nullptr)
+            continue;
+        
         if(ball.position.y + ball.radius >= TABLE_RIGHT_EDGE) {
             ball.position.y = TABLE_RIGHT_EDGE - ball.radius;
             ball.velocity.y = -ball.velocity.y;
@@ -97,10 +147,14 @@ void GameLogic::computeFrame(float deltaT) {
     
     // check collisions with other balls
     for( int i = 0; i < NUM_BALLS - 1; i++) {
+        Ball& b1 = balls[i];
+        if(b1.hide)
+            continue;
         for( int j = i + 1; j < NUM_BALLS; j++) {
-            Ball& b1 = balls[i];
             Ball& b2 = balls[j];
-            if( glm::distance(b1.position, b2.position) < b1.radius + b2.radius) {
+            if(b2.hide)
+                continue;
+            if(glm::distance(b1.position, b2.position) < b1.radius + b2.radius) {
                 handleBallCollision(b1, b2);
             }
         }
@@ -108,6 +162,8 @@ void GameLogic::computeFrame(float deltaT) {
     
     // apply friction
     for (auto &ball : balls) {
+        if(ball.inHole != nullptr)
+            continue;
         if(glm::length(ball.velocity) > 0){
             auto deltaV = glm::normalize(ball.velocity) * FRICTION_FACTOR * deltaT;
             auto newVelocity = ball.velocity - deltaV;
@@ -121,7 +177,15 @@ void GameLogic::computeFrame(float deltaT) {
         
     // apply displacement
     for (auto &ball : balls) {
+        if(ball.inHole != nullptr)
+            continue;
         ball.position += deltaT * ball.velocity;
+    }
+    
+    // apply animation
+    for (auto &ball : balls) {
+        if(ball.animatingFall)
+            applyAnimation(ball, deltaT);
     }
     
 }
@@ -141,4 +205,11 @@ void GameLogic::setRandomBallVelocities() {
     for (auto &ball : balls) {
         ball.velocity = glm::vec2(rand() % 4 - 2 , rand() % 4 - 2) * 3.0f;
     }
+}
+
+glm::mat4 GameLogic::pointerWorldMatrix() {
+    auto hole = holes[1];
+    
+    return glm::translate(glm::mat4(1), glm::vec3(hole.position.x / 2, BALL_HEIGHT, -hole.position.y / 2))
+        * glm::scale(glm::mat4(1), glm::vec3(BALL_SCALE * hole.radius));
 }

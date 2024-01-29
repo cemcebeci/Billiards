@@ -47,14 +47,14 @@ protected:
     // Models, textures and Descriptors (values assigned to the uniforms)
     // Please note that Model objects depends on the corresponding vertex structure
     // Models
-    Model<Vertex> M1, M2, M3, M4, MTable, MArrow;
+    Model<Vertex> M1, M2, M3, M4, MTable, MArrow, MPointer;
     // Descriptor sets
-    DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSArrow;
+    DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSArrow, DSPointer;
     // Textures
     Texture T1, T2, TFurniture, TDungeon, TBall;
     
     // C++ storage for uniform variables
-    UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable, uboArrow;
+    UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable, uboArrow, uboPointer;
     
     // Other application parameters
     BallObject balls[NUM_BALLS];
@@ -70,9 +70,9 @@ protected:
         initialBackgroundColor = {0.0f, 0.005f, 0.01f, 1.0f};
         
         // Descriptor pool sizes
-        uniformBlocksInPool = 6 + NUM_BALLS;
-        texturesInPool = 7 + NUM_BALLS;
-        setsInPool = 6 + NUM_BALLS;
+        uniformBlocksInPool = 7 + NUM_BALLS;
+        texturesInPool = 8 + NUM_BALLS;
+        setsInPool = 7 + NUM_BALLS;
         
         camera.aspectRatio = (float)windowWidth / (float)windowHeight;
     }
@@ -160,6 +160,7 @@ protected:
             ball.model.init(this, &VD, "Models/ball.obj", OBJ);
         }
         MArrow.init(this, &VD, "models/log_Mesh.965.mgcg", MGCG);
+        MPointer.init(this, &VD, "models/Sphere.gltf", GLTF);
         
         // Create the textures
         // The second parameter is the file name
@@ -172,7 +173,7 @@ protected:
         
         // Init local variables
         initCamera(camera);
-        gameLogic.initBalls();
+        gameLogic.init();
     }
     
 	// Here you create your pipelines and Descriptor Sets!
@@ -211,6 +212,10 @@ protected:
             {0, UNIFORM, sizeof(UniformBlock), nullptr},
             {1, TEXTURE, 0, &TDungeon}
         });
+        DSPointer.init(this, &DSL, {
+            {0, UNIFORM, sizeof(UniformBlock), nullptr},
+            {1, TEXTURE, 0, &T2}
+        });
         
         for(auto &ball : balls) {
             ball.descriptorSet.init(this, &DSL, {
@@ -233,6 +238,7 @@ protected:
 		DS4.cleanup();
         DSTable.cleanup();
         DSArrow.cleanup();
+        DSPointer.cleanup();
         
         for(auto &ball : balls) {
             ball.descriptorSet.cleanup();
@@ -255,6 +261,7 @@ protected:
 		M4.cleanup();
         MTable.cleanup();
         MArrow.cleanup();
+        MPointer.cleanup();
         
         for(auto &ball : balls) {
             ball.model.cleanup();
@@ -316,6 +323,10 @@ protected:
         DSArrow.bind(commandBuffer, P, 0, currentImage);
         MArrow.bind(commandBuffer);
         vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MArrow.indices.size()), 1, 0, 0, 0);
+        
+        DSPointer.bind(commandBuffer, P, 0, currentImage);
+        MPointer.bind(commandBuffer);
+        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MPointer.indices.size()), 1, 0, 0, 0);
         
         for(auto &ball : balls) {
             ball.descriptorSet.bind(commandBuffer, P, 0, currentImage);
@@ -381,6 +392,10 @@ protected:
         World = gameLogic.computeArrowWorldMatrix();
         uboArrow.mvpMat = ViewProjection * World;
         DSArrow.map(currentImage, &uboArrow, sizeof(uboArrow), 0);
+        
+        World = gameLogic.pointerWorldMatrix();
+        uboPointer.mvpMat = ViewProjection * World;
+        DSPointer.map(currentImage, &uboPointer, sizeof(uboPointer), 0);
         
         for (int i = 0; i < NUM_BALLS; i++) {
             BallObject &obj = balls[i];
