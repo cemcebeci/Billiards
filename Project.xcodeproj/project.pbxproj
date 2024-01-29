@@ -45,6 +45,18 @@
 		E828E2F82B5991EE00F5A42D /* Camera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
 		E828E2F92B59925200F5A42D /* Input.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Input.hpp; sourceTree = "<group>"; };
 		E828E2FA2B59979B00F5A42D /* GameLogic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameLogic.cpp; sourceTree = "<group>"; };
+		E85856EC2B683C4500EA3D79 /* OverlayVert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OverlayVert.spv; sourceTree = "<group>"; };
+		E85856ED2B683C4600EA3D79 /* Overlay.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Overlay.frag; sourceTree = "<group>"; };
+		E85856EE2B683C4600EA3D79 /* OverlayFrag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OverlayFrag.spv; sourceTree = "<group>"; };
+		E85856EF2B683C4600EA3D79 /* Overlay.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Overlay.vert; sourceTree = "<group>"; };
+		E85856F02B683E9800EA3D79 /* PressSpace.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PressSpace.png; sourceTree = "<group>"; };
+		E87C74722B5FF96D00146B4B /* log_Mesh.965.mgcg */ = {isa = PBXFileReference; lastKnownFileType = file; path = log_Mesh.965.mgcg; sourceTree = "<group>"; };
+		E87C74732B5FFA7100146B4B /* Textures_Dungeon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Textures_Dungeon.png; sourceTree = "<group>"; };
+		E87C74752B60087C00146B4B /* Cube_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cube_color.png; sourceTree = "<group>"; };
+		E87C74762B60096600146B4B /* billiardtable-TurboSquid.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "billiardtable-TurboSquid.obj"; sourceTree = "<group>"; };
+		E87C74772B60096600146B4B /* Table.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Table.png; sourceTree = "<group>"; };
+		E87C747A2B60126C00146B4B /* ball_8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball_8.png; sourceTree = "<group>"; };
+		E87C747E2B6015B500146B4B /* ball.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ball.obj; sourceTree = "<group>"; };
 		E887AFB82B56DCE800A1C372 /* Checker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Checker.png; sourceTree = "<group>"; };
 		E887AFB92B56DCE800A1C372 /* Textures_Food.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Textures_Food.png; sourceTree = "<group>"; };
 		E887AFBB2B56DCEA00A1C372 /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
@@ -460,6 +472,7 @@
 				E887B1462B56ED0500A1C372 /* Ball.cpp */,
 				E887AFBA2B56DCEA00A1C372 /* headers */,
 				E887B1412B56DCEC00A1C372 /* MeshLoader.cpp */,
+				E87C74752B60087C00146B4B /* Cube_color.png */,
 				E887B1372B56DCEB00A1C372 /* models */,
 				E887B13C2B56DCEC00A1C372 /* shaders */,
 				E887B13B2B56DCEB00A1C372 /* Starter.hpp */,
@@ -490,8 +503,12 @@
 		E887AFB72B56DCE800A1C372 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				E85856F02B683E9800EA3D79 /* PressSpace.png */,
+				E87C747A2B60126C00146B4B /* ball_8.png */,
+				E87C74772B60096600146B4B /* Table.png */,
 				E887AFB82B56DCE800A1C372 /* Checker.png */,
 				E887AFB92B56DCE800A1C372 /* Textures_Food.png */,
+				E87C74732B5FFA7100146B4B /* Textures_Dungeon.png */,
 				E887B1452B56E69800A1C372 /* Textures_Forniture.png */,
 			);
 			path = textures;
@@ -929,10 +946,13 @@
 		E887B1372B56DCEB00A1C372 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				E87C74762B60096600146B4B /* billiardtable-TurboSquid.obj */,
+				E87C74722B5FF96D00146B4B /* log_Mesh.965.mgcg */,
 				E887B1382B56DCEB00A1C372 /* Cube.obj */,
 				E887B1392B56DCEB00A1C372 /* dish.005_Mesh.098.mgcg */,
 				E887B13A2B56DCEB00A1C372 /* Sphere.gltf */,
 				E887B1442B56E60E00A1C372 /* coffee_table_019_Mesh.6459.mgcg */,
+				E87C747E2B6015B500146B4B /* ball.obj */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -940,6 +960,10 @@
 		E887B13C2B56DCEC00A1C372 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				E85856ED2B683C4600EA3D79 /* Overlay.frag */,
+				E85856EF2B683C4600EA3D79 /* Overlay.vert */,
+				E85856EE2B683C4600EA3D79 /* OverlayFrag.spv */,
+				E85856EC2B683C4500EA3D79 /* OverlayVert.spv */,
 				E887B13D2B56DCEC00A1C372 /* Shader.vert */,
 				E887B13E2B56DCEC00A1C372 /* ShaderVert.spv */,
 				E887B13F2B56DCEC00A1C372 /* Shader.frag */,

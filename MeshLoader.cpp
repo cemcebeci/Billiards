@@ -17,12 +17,22 @@ struct UniformBlock {
 	alignas(16) glm::mat4 mvpMat;
 };
 
+struct OverlayUniformBlock {
+    alignas(4) float visible;
+};
+
 // The vertices data structures
 // Example
 struct Vertex {
 	glm::vec3 pos;
 	glm::vec2 UV;
 };
+
+struct VertexOverlay {
+    glm::vec2 pos;
+    glm::vec2 UV;
+};
+
 
 struct BallObject {
     Model<Vertex> model;
@@ -40,21 +50,25 @@ protected:
     
     // Vertex formats
     VertexDescriptor VD;
+    VertexDescriptor VOverlay;
     
     // Pipelines [Shader couples]
     Pipeline P;
+    Pipeline POverlay;
     
     // Models, textures and Descriptors (values assigned to the uniforms)
     // Please note that Model objects depends on the corresponding vertex structure
     // Models
     Model<Vertex> M1, M2, M3, M4, MTable, MArrow, MPointer;
+    Model<VertexOverlay> MOverlay;
     // Descriptor sets
-    DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSArrow, DSPointer;
+    DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSArrow, DSPointer, DSOverlay;
     // Textures
-    Texture T1, T2, TFurniture, TDungeon, TBall;
+    Texture T1, T2, TFurniture, TDungeon, TBall, TOverlay;
     
     // C++ storage for uniform variables
     UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable, uboArrow, uboPointer;
+    OverlayUniformBlock uboOverlay;
     
     // Other application parameters
     BallObject balls[NUM_BALLS];
@@ -70,9 +84,9 @@ protected:
         initialBackgroundColor = {0.0f, 0.005f, 0.01f, 1.0f};
         
         // Descriptor pool sizes
-        uniformBlocksInPool = 7 + NUM_BALLS;
-        texturesInPool = 8 + NUM_BALLS;
-        setsInPool = 7 + NUM_BALLS;
+        uniformBlocksInPool = 8 + NUM_BALLS;
+        texturesInPool = 9 + NUM_BALLS;
+        setsInPool = 8 + NUM_BALLS;
         
         camera.aspectRatio = (float)windowWidth / (float)windowHeight;
     }
@@ -132,12 +146,22 @@ protected:
                 sizeof(glm::vec2), UV}
         });
         
+        VOverlay.init(this, {
+                  {0, sizeof(VertexOverlay), VK_VERTEX_INPUT_RATE_VERTEX}
+                }, {
+                  {0, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(VertexOverlay, pos),
+                         sizeof(glm::vec2), OTHER},
+                  {0, 1, VK_FORMAT_R32G32_SFLOAT, offsetof(VertexOverlay, UV),
+                         sizeof(glm::vec2), UV}
+                });
+        
         // Pipelines [Shader couples]
         // The second parameter is the pointer to the vertex definition
         // Third and fourth parameters are respectively the vertex and fragment shaders
         // The last array, is a vector of pointer to the layouts of the sets that will
         // be used in this pipeline. The first element will be set 0, and so on..
         P.init(this, &VD, "shaders/ShaderVert.spv", "shaders/ShaderFrag.spv", {&DSL});
+        POverlay.init(this, &VOverlay, "shaders/OverlayVert.spv", "Shaders/OverlayFrag.spv", {&DSL});
         
         // Models, textures and Descriptors (values assigned to the uniforms)
         
@@ -162,6 +186,11 @@ protected:
         MArrow.init(this, &VD, "models/log_Mesh.965.mgcg", MGCG);
         MPointer.init(this, &VD, "models/Sphere.gltf", GLTF);
         
+        MOverlay.vertices = {{{-1.0f, -0.58559f}, {0.0102f, 0.0f}}, {{-1.0f, 0.58559f}, {0.0102f,0.85512f}},
+                         {{ 1.0f,-0.58559f}, {1.0f,0.0f}}, {{ 1.0f, 0.58559f}, {1.0f,0.85512f}}};
+        MOverlay.indices = {0, 1, 2,    1, 3, 2};
+        MOverlay.initMesh(this, &VD);
+        
         // Create the textures
         // The second parameter is the file name
         T1.init(this,   "textures/Checker.png");
@@ -169,6 +198,7 @@ protected:
         TFurniture.init(this, "textures/Table.png");
         TDungeon.init(this, "textures/Textures_Dungeon.png");
         TBall.init(this, "textures/ball_8.png");
+        TOverlay.init(this,"textures/PressSpace.png");
 
         
         // Init local variables
@@ -180,6 +210,7 @@ protected:
 	void pipelinesAndDescriptorSetsInit() {
 		// This creates a new pipeline (with the current surface), using its shaders
 		P.create();
+        POverlay.create();
 
 		// Here you define the data set
 		DS1.init(this, &DSL, {
@@ -216,6 +247,10 @@ protected:
             {0, UNIFORM, sizeof(UniformBlock), nullptr},
             {1, TEXTURE, 0, &T2}
         });
+        DSOverlay.init(this, &DSL, {
+            {0, UNIFORM, sizeof(OverlayUniformBlock), nullptr},
+            {1, TEXTURE, 0, &TOverlay}
+        });
         
         for(auto &ball : balls) {
             ball.descriptorSet.init(this, &DSL, {
@@ -230,6 +265,7 @@ protected:
 	void pipelinesAndDescriptorSetsCleanup() {
 		// Cleanup pipelines
 		P.cleanup();
+        POverlay.cleanup();
 
 		// Cleanup datasets
 		DS1.cleanup();
@@ -239,6 +275,7 @@ protected:
         DSTable.cleanup();
         DSArrow.cleanup();
         DSPointer.cleanup();
+        DSOverlay.cleanup();
         
         for(auto &ball : balls) {
             ball.descriptorSet.cleanup();
@@ -262,6 +299,7 @@ protected:
         MTable.cleanup();
         MArrow.cleanup();
         MPointer.cleanup();
+        MOverlay.cleanup();
         
         for(auto &ball : balls) {
             ball.model.cleanup();
@@ -271,7 +309,8 @@ protected:
 		DSL.cleanup();
 		
 		// Destroies the pipelines
-		P.destroy();		
+		P.destroy();	
+        P.destroy();
 	}
 	
 	// Here it is the creation of the command buffer:
@@ -333,6 +372,12 @@ protected:
             ball.model.bind(commandBuffer);
             vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(ball.model.indices.size()), 1, 0, 0, 0);
         }
+        
+        POverlay.bind(commandBuffer);
+        DSOverlay.bind(commandBuffer, POverlay, 0, currentImage);
+        MOverlay.bind(commandBuffer);
+        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MOverlay.indices.size()), 1, 0, 0, 0);
+        
 	}
 
 	// Here is where you update the uniforms.
@@ -402,6 +447,9 @@ protected:
             obj.ubo.mvpMat = ViewProjection * gameLogic.getBall(i).computeWorldMatrix();
             obj.descriptorSet.map(currentImage, &obj.ubo, sizeof(obj.ubo), 0);
         }
+        
+        uboOverlay.visible = 1.0f;
+        DSOverlay.map(currentImage, &uboOverlay, sizeof(uboOverlay), 0);
 	}
 };
 
