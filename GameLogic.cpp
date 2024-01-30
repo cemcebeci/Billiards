@@ -12,9 +12,26 @@ const float TABLE_LEFT_EDGE = -16.5;
 const float TABLE_RIGHT_EDGE = 16.5;
 
 void GameLogic::initBalls() {
-    balls[0].position = glm::vec2(-2, 1);
-    balls[1].position = glm::vec2(2, 2);
-    balls[2].position = glm::vec2(2, 5);
+    for (int i = 0; i < NUM_BALLS; i++) {
+        balls[i].id = i;
+    }
+
+    balls[0].position = glm::vec2(0,    -6);
+    balls[1].position = glm::vec2(0,    1 + 0);
+    balls[2].position = glm::vec2(1,    1 + sqrt(3));
+    balls[3].position = glm::vec2(-1,   1 + sqrt(3));
+    balls[4].position = glm::vec2(2,    1 + 2 * sqrt(3));
+    balls[5].position = glm::vec2(0,    1 + 2 * sqrt(3));
+    balls[6].position = glm::vec2(-2,   1 + 2 * sqrt(3));
+    balls[7].position = glm::vec2(3,    1 + 3 * sqrt(3));
+    balls[8].position = glm::vec2(1,    1 + 3 * sqrt(3));
+    balls[9].position = glm::vec2(-1,   1 + 3 * sqrt(3));
+    balls[10].position = glm::vec2(-3,  1 + 3 * sqrt(3));
+    balls[11].position = glm::vec2(4,   1 + 4 * sqrt(3));
+    balls[12].position = glm::vec2(2,   1 + 4 * sqrt(3));
+    balls[13].position = glm::vec2(0,   1 + 4 * sqrt(3));
+    balls[14].position = glm::vec2(-2,  1 + 4 * sqrt(3));
+    balls[15].position = glm::vec2(-4,  1 + 4 * sqrt(3));
 }
 
 void GameLogic::initHoles() {

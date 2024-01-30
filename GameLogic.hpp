@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Input.hpp"
 
-const int NUM_BALLS = 3;
+const int NUM_BALLS = 16;
 const float BALL_HEIGHT = 0.0f;
 const float BALL_SCALE = 0.4;
 const float FRICTION_FACTOR = 1;
@@ -24,6 +24,7 @@ struct Hole
 
 struct Ball
 {
+    int id = -1;
     glm::vec2 position;
     glm::vec2 velocity = glm::vec2(0);
     float radius = 1; // in logical units.

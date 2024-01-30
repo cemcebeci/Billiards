@@ -39,6 +39,7 @@ struct BallObject {
     DescriptorSet descriptorSet;
     UniformBlock ubo;
     glm::vec3 pos;
+    Texture tex;
 };
 
 // MAIN ! 
@@ -64,7 +65,7 @@ protected:
     // Descriptor sets
     DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSArrow, DSPointer, DSP1Turn, DSP2Turn;
     // Textures
-    Texture T1, T2, TFurniture, TDungeon, TBall, TP1Turn, TP2Turn;
+    Texture T1, T2, TFurniture, TDungeon, TP1Turn, TP2Turn;
     
     // C++ storage for uniform variables
     UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable, uboArrow, uboPointer;
@@ -85,7 +86,7 @@ protected:
         
         // Descriptor pool sizes
         uniformBlocksInPool = 9 + NUM_BALLS;
-        texturesInPool = 10 + NUM_BALLS;
+        texturesInPool = 10 + NUM_BALLS + NUM_BALLS;
         setsInPool = 9 + NUM_BALLS;
         
         camera.aspectRatio = (float)windowWidth / (float)windowHeight;
@@ -205,7 +206,11 @@ protected:
         T2.init(this,   "textures/Textures_Food.png");
         TFurniture.init(this, "textures/Table.png");
         TDungeon.init(this, "textures/Textures_Dungeon.png");
-        TBall.init(this, "textures/ball_8.png");
+        int id = 0;
+        for (auto &ball : balls) {
+            std::string path = "textures/ball_" + std::to_string(id++) + ".png";
+            ball.tex.init(this, path.data());
+        }
         TP1Turn.init(this,"textures/Player_1_turn.png");
         TP2Turn.init(this,"textures/Player_2_turn.png");
 
@@ -268,7 +273,7 @@ protected:
         for(auto &ball : balls) {
             ball.descriptorSet.init(this, &DSL, {
                 {0, UNIFORM, sizeof(UniformBlock), nullptr},
-                {1, TEXTURE, 0, &TBall}
+                {1, TEXTURE, 0, &ball.tex}
             });
         }
 	}
