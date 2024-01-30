@@ -60,15 +60,15 @@ protected:
     // Please note that Model objects depends on the corresponding vertex structure
     // Models
     Model<Vertex> M1, M2, M3, M4, MTable, MArrow, MPointer;
-    Model<VertexOverlay> MOverlay;
+    Model<VertexOverlay> MP1Turn, MP2Turn;
     // Descriptor sets
-    DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSArrow, DSPointer, DSOverlay;
+    DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSArrow, DSPointer, DSP1Turn, DSP2Turn;
     // Textures
-    Texture T1, T2, TFurniture, TDungeon, TBall, TOverlay;
+    Texture T1, T2, TFurniture, TDungeon, TBall, TP1Turn, TP2Turn;
     
     // C++ storage for uniform variables
     UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable, uboArrow, uboPointer;
-    OverlayUniformBlock uboOverlay;
+    OverlayUniformBlock uboP1Turn, uboP2Turn;
     
     // Other application parameters
     BallObject balls[NUM_BALLS];
@@ -84,9 +84,9 @@ protected:
         initialBackgroundColor = {0.0f, 0.005f, 0.01f, 1.0f};
         
         // Descriptor pool sizes
-        uniformBlocksInPool = 8 + NUM_BALLS;
-        texturesInPool = 9 + NUM_BALLS;
-        setsInPool = 8 + NUM_BALLS;
+        uniformBlocksInPool = 9 + NUM_BALLS;
+        texturesInPool = 10 + NUM_BALLS;
+        setsInPool = 9 + NUM_BALLS;
         
         camera.aspectRatio = (float)windowWidth / (float)windowHeight;
     }
@@ -162,6 +162,8 @@ protected:
         // be used in this pipeline. The first element will be set 0, and so on..
         P.init(this, &VD, "shaders/ShaderVert.spv", "shaders/ShaderFrag.spv", {&DSL});
         POverlay.init(this, &VOverlay, "shaders/OverlayVert.spv", "Shaders/OverlayFrag.spv", {&DSL});
+        POverlay.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
+                                     VK_CULL_MODE_NONE, false);
         
         // Models, textures and Descriptors (values assigned to the uniforms)
         
@@ -186,10 +188,16 @@ protected:
         MArrow.init(this, &VD, "models/log_Mesh.965.mgcg", MGCG);
         MPointer.init(this, &VD, "models/Sphere.gltf", GLTF);
         
-        MOverlay.vertices = {{{-1.0f, -0.58559f}, {0.0102f, 0.0f}}, {{-1.0f, 0.58559f}, {0.0102f,0.85512f}},
-                         {{ 1.0f,-0.58559f}, {1.0f,0.0f}}, {{ 1.0f, 0.58559f}, {1.0f,0.85512f}}};
-        MOverlay.indices = {0, 1, 2,    1, 3, 2};
-        MOverlay.initMesh(this, &VD);
+        auto margin = 0.05f;
+        MP1Turn.vertices = {{{0 - margin, -1 + margin}, {0.0f, 0.0f}}, {{0 - margin, -0.82 + margin}, {0.0f,1.0f}},
+                         {{ 1.0f - margin, -1 + margin}, {1.0f,0.0f}}, {{ 1.0f - margin, -0.82 + margin}, {1.0f,1.0f}}};
+        MP1Turn.indices = {0, 1, 2,    1, 3, 2};
+        MP1Turn.initMesh(this, &VD);
+        
+        MP2Turn.vertices = {{{0 - margin, -1 + margin}, {0.0f, 0.0f}}, {{0 - margin, -0.82 + margin}, {0.0f,1.0f}},
+                         {{ 1.0f - margin, -1 + margin}, {1.0f,0.0f}}, {{ 1.0f - margin, -0.82 + margin}, {1.0f,1.0f}}};
+        MP2Turn.indices = {0, 1, 2,    1, 3, 2};
+        MP2Turn.initMesh(this, &VD);
         
         // Create the textures
         // The second parameter is the file name
@@ -198,7 +206,8 @@ protected:
         TFurniture.init(this, "textures/Table.png");
         TDungeon.init(this, "textures/Textures_Dungeon.png");
         TBall.init(this, "textures/ball_8.png");
-        TOverlay.init(this,"textures/PressSpace.png");
+        TP1Turn.init(this,"textures/Player_1_turn.png");
+        TP2Turn.init(this,"textures/Player_2_turn.png");
 
         
         // Init local variables
@@ -247,9 +256,13 @@ protected:
             {0, UNIFORM, sizeof(UniformBlock), nullptr},
             {1, TEXTURE, 0, &T2}
         });
-        DSOverlay.init(this, &DSL, {
+        DSP1Turn.init(this, &DSL, {
             {0, UNIFORM, sizeof(OverlayUniformBlock), nullptr},
-            {1, TEXTURE, 0, &TOverlay}
+            {1, TEXTURE, 0, &TP1Turn}
+        });
+        DSP2Turn.init(this, &DSL, {
+            {0, UNIFORM, sizeof(OverlayUniformBlock), nullptr},
+            {1, TEXTURE, 0, &TP2Turn}
         });
         
         for(auto &ball : balls) {
@@ -275,7 +288,8 @@ protected:
         DSTable.cleanup();
         DSArrow.cleanup();
         DSPointer.cleanup();
-        DSOverlay.cleanup();
+        DSP1Turn.cleanup();
+        DSP2Turn.cleanup();
         
         for(auto &ball : balls) {
             ball.descriptorSet.cleanup();
@@ -299,7 +313,8 @@ protected:
         MTable.cleanup();
         MArrow.cleanup();
         MPointer.cleanup();
-        MOverlay.cleanup();
+        MP1Turn.cleanup();
+        MP2Turn.cleanup();
         
         for(auto &ball : balls) {
             ball.model.cleanup();
@@ -374,9 +389,13 @@ protected:
         }
         
         POverlay.bind(commandBuffer);
-        DSOverlay.bind(commandBuffer, POverlay, 0, currentImage);
-        MOverlay.bind(commandBuffer);
-        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MOverlay.indices.size()), 1, 0, 0, 0);
+        DSP1Turn.bind(commandBuffer, POverlay, 0, currentImage);
+        MP1Turn.bind(commandBuffer);
+        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MP1Turn.indices.size()), 1, 0, 0, 0);
+        
+        DSP2Turn.bind(commandBuffer, POverlay, 0, currentImage);
+        MP2Turn.bind(commandBuffer);
+        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MP2Turn.indices.size()), 1, 0, 0, 0);
         
 	}
 
@@ -448,8 +467,11 @@ protected:
             obj.descriptorSet.map(currentImage, &obj.ubo, sizeof(obj.ubo), 0);
         }
         
-        uboOverlay.visible = 1.0f;
-        DSOverlay.map(currentImage, &uboOverlay, sizeof(uboOverlay), 0);
+        uboP1Turn.visible = (gameLogic.getCurrentPlayer() == 0) ? 1.0f : 0.0f;
+        DSP1Turn.map(currentImage, &uboP1Turn, sizeof(uboP1Turn), 0);
+        
+        uboP2Turn.visible = (gameLogic.getCurrentPlayer() == 1) ? 1.0f : 0.0f;
+        DSP2Turn.map(currentImage, &uboP2Turn, sizeof(uboP2Turn), 0);
 	}
 };
 

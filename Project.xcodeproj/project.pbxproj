@@ -36,6 +36,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E80DD31C2B698F550006E0A4 /* Player_1_turn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Player_1_turn.png; sourceTree = "<group>"; };
+		E80DD31D2B6994F70006E0A4 /* Player_2_turn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Player_2_turn.png; sourceTree = "<group>"; };
 		E82228D72B50523F005E7203 /* Project */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Project; sourceTree = BUILT_PRODUCTS_DIR; };
 		E82228E22B505343005E7203 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		E82228E42B505366005E7203 /* libvulkan.1.3.239.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvulkan.1.3.239.dylib; path = ../../VulkanSDK/1.3.239.0/macOS/lib/libvulkan.1.3.239.dylib; sourceTree = "<group>"; };
@@ -503,6 +505,8 @@
 		E887AFB72B56DCE800A1C372 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				E80DD31D2B6994F70006E0A4 /* Player_2_turn.png */,
+				E80DD31C2B698F550006E0A4 /* Player_1_turn.png */,
 				E85856F02B683E9800EA3D79 /* PressSpace.png */,
 				E87C747A2B60126C00146B4B /* ball_8.png */,
 				E87C74772B60096600146B4B /* Table.png */,

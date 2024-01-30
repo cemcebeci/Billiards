@@ -50,6 +50,7 @@ public:
     void updateGame(Input input);
     glm::mat4 computeArrowWorldMatrix();
     glm::mat4 pointerWorldMatrix();
+    int getCurrentPlayer() {return currentPlayer;}
     
     
 private:
@@ -59,6 +60,8 @@ private:
     bool aiming = true;
     float direction = 0.0f;
     float chargeTime;
+    int currentPlayer = 0;
+    
     void computeFrame(float deltaT);
     bool allBallsAreStill();
     void checkWhetherAnyBallsGoIn();
