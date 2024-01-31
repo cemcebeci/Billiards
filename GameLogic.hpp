@@ -5,6 +5,7 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include "Input.hpp"
 
 const int NUM_BALLS = 16;
@@ -26,6 +27,7 @@ struct Ball
 {
     int id = -1;
     glm::vec2 position;
+    glm::quat rotation = glm::quat(glm::vec3(0,0,0));
     glm::vec2 velocity = glm::vec2(0);
     float radius = 1; // in logical units.
     Hole* inHole = nullptr;
@@ -36,7 +38,7 @@ struct Ball
         if(hide)
             return glm::scale(glm::mat4(1), glm::vec3(0));
         
-        return computeTranslationMatrix() * glm::scale(glm::mat4(1), glm::vec3(BALL_SCALE * radius));
+        return computeTranslationMatrix() * glm::mat4(rotation) * glm::scale(glm::mat4(1), glm::vec3(BALL_SCALE * radius));
     }
     
     glm::mat4 computeTranslationMatrix() {

@@ -138,7 +138,6 @@ void applyAnimation(Ball& ball, float deltaT) {
 }
 
 void GameLogic::computeFrame(float deltaT) {
-    
     // check edge collisions
     for(auto &ball : balls) {
         if(ball.inHole != nullptr)
@@ -203,6 +202,16 @@ void GameLogic::computeFrame(float deltaT) {
     for (auto &ball : balls) {
         if(ball.animatingFall)
             applyAnimation(ball, deltaT);
+    }
+    
+    // apply rotation
+    for(auto &ball : balls) {
+        if(glm::length(ball.velocity) > 0) {
+            auto axis = glm::vec3(ball.velocity.y, 0, ball.velocity.x);
+            auto amount = glm::length(ball.velocity) * deltaT / ball.radius / 2;
+            std::cout << amount << "\n";
+            ball.rotation = glm::rotate(ball.rotation, -amount, axis);
+        }
     }
     
 }
