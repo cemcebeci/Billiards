@@ -23,10 +23,6 @@ struct OverlayUniformBlock {
     alignas(4) float visible;
 };
 
-struct LightingUniformBlock {
-    
-};
-
 struct SpotlightUniformBufferObject {
     alignas(16) glm::vec3 lightPos;
     alignas(16) glm::vec3 lightDir;
@@ -69,21 +65,22 @@ protected:
     VertexDescriptor VOverlay;
     
     // Pipelines [Shader couples]
-    Pipeline P;
+    Pipeline PBlinn;
+    Pipeline POrenNayar;
     Pipeline POverlay;
     
     // Models, textures and Descriptors (values assigned to the uniforms)
     // Please note that Model objects depends on the corresponding vertex structure
     // Models
-    Model<Vertex> M1, M2, M3, MTable, MStick, MPointer;
+    Model<Vertex> MTable, MStick, MPointer;
     Model<VertexOverlay> MP1Turn, MP2Turn;
     // Descriptor sets
-    DescriptorSet DS1, DS2, DS3, DSTable, DSStick, DSPointer, DSP1Turn, DSP2Turn, DSLighting;
+    DescriptorSet DSTable, DSStick, DSPointer, DSP1Turn, DSP2Turn, DSLighting;
     // Textures
-    Texture T1, T2, TFurniture, TDungeon, TP1Turn, TP2Turn, TStick;
+    Texture TPointer, TFurniture, TP1Turn, TP2Turn, TStick;
     
     // C++ storage for uniform variables
-    UniformBlock ubo1, ubo2, ubo3, uboTable, uboStick, uboPointer;
+    UniformBlock uboTable, uboStick, uboPointer;
     OverlayUniformBlock uboP1Turn, uboP2Turn;
     SpotlightUniformBufferObject uboLighting;
     
@@ -182,8 +179,9 @@ protected:
         // Third and fourth parameters are respectively the vertex and fragment shaders
         // The last array, is a vector of pointer to the layouts of the sets that will
         // be used in this pipeline. The first element will be set 0, and so on..
-        P.init(this, &VD, "shaders/ShaderVert.spv", "shaders/ShaderFrag.spv", {&DSLLighting, &DSL});
-        POverlay.init(this, &VOverlay, "shaders/OverlayVert.spv", "Shaders/OverlayFrag.spv", {&DSL});
+        PBlinn.init(this, &VD, "shaders/BlinnVert.spv", "shaders/BlinnFrag.spv", {&DSLLighting, &DSL});
+        POrenNayar.init(this, &VD, "shaders/OrenNayarVert.spv", "shaders/OrenNayarFrag.spv", {&DSLLighting, &DSL});
+        POverlay.init(this, &VOverlay, "shaders/OverlayVert.spv", "shaders/OverlayFrag.spv", {&DSL});
         POverlay.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
                                      VK_CULL_MODE_NONE, false);
         
@@ -193,17 +191,13 @@ protected:
         // The second parameter is the pointer to the vertex definition for this model
         // The third parameter is the file name
         // The last is a constant specifying the file type: currently only OBJ or GLTF
-        M1.init(this,   &VD, "Models/Cube.obj", OBJ);
-        M2.init(this,   &VD, "Models/Sphere.gltf", GLTF);
-        M3.init(this,   &VD, "Models/dish.005_Mesh.098.mgcg", MGCG);
-        
         
         MTable.init(this, &VD, "models/billiardtable-TurboSquid.obj", OBJ);
         for (auto &ball : balls) {
             ball.model.init(this, &VD, "Models/ball.obj", OBJ);
         }
         MStick.init(this, &VD, "models/stick.obj", OBJ);
-        MPointer.init(this, &VD, "models/Sphere.gltf", GLTF);
+        MPointer.init(this, &VD, "models/ball.obj", OBJ);
         
         auto margin = 0.05f;
         MP1Turn.vertices = {{{0 - margin, -1 + margin}, {0.0f, 0.0f}}, {{0 - margin, -0.82 + margin}, {0.0f,1.0f}},
@@ -218,10 +212,8 @@ protected:
         
         // Create the textures
         // The second parameter is the file name
-        T1.init(this,   "textures/Checker.png");
-        T2.init(this,   "textures/Textures_Food.png");
+        TPointer.init(this,   "textures/ball_8.png");
         TFurniture.init(this, "textures/Table.png");
-        TDungeon.init(this, "textures/Textures_Dungeon.png");
         TStick.init(this, "textures/BilliardStick_DefaultMaterial_AlbedoTransparency.png");
         int id = 0;
         for (auto &ball : balls) {
@@ -240,29 +232,11 @@ protected:
 	// Here you create your pipelines and Descriptor Sets!
 	void pipelinesAndDescriptorSetsInit() {
 		// This creates a new pipeline (with the current surface), using its shaders
-		P.create();
+		PBlinn.create();
+        POrenNayar.create();
         POverlay.create();
 
 		// Here you define the data set
-		DS1.init(this, &DSL, {
-		// the second parameter, is a pointer to the Uniform Set Layout of this set
-		// the last parameter is an array, with one element per binding of the set.
-		// first  elmenet : the binding number
-		// second element : UNIFORM or TEXTURE (an enum) depending on the type
-		// third  element : only for UNIFORMs, the size of the corresponding C++ object. For texture, just put 0
-		// fourth element : only for TEXTUREs, the pointer to the corresponding texture object. For uniforms, use nullptr
-					{0, UNIFORM, sizeof(UniformBlock), nullptr},
-					{1, TEXTURE, 0, &T1}
-				});
-		DS2.init(this, &DSL, {
-					{0, UNIFORM, sizeof(UniformBlock), nullptr},
-					{1, TEXTURE, 0, &T1}
-				});
-		DS3.init(this, &DSL, {
-					{0, UNIFORM, sizeof(UniformBlock), nullptr},
-					{1, TEXTURE, 0, &T2}
-				});
-        
         DSTable.init(this, &DSL, {
             {0, UNIFORM, sizeof(UniformBlock), nullptr},
             {1, TEXTURE, 0, &TFurniture}
@@ -273,7 +247,7 @@ protected:
         });
         DSPointer.init(this, &DSL, {
             {0, UNIFORM, sizeof(UniformBlock), nullptr},
-            {1, TEXTURE, 0, &T2}
+            {1, TEXTURE, 0, &TPointer}
         });
         DSP1Turn.init(this, &DSL, {
             {0, UNIFORM, sizeof(OverlayUniformBlock), nullptr},
@@ -300,13 +274,11 @@ protected:
 	// All the object classes defined in Starter.hpp have a method .cleanup() for this purpose
 	void pipelinesAndDescriptorSetsCleanup() {
 		// Cleanup pipelines
-		P.cleanup();
+		PBlinn.cleanup();
+        POrenNayar.cleanup();
         POverlay.cleanup();
 
 		// Cleanup datasets
-		DS1.cleanup();
-		DS2.cleanup();
-		DS3.cleanup();
         DSTable.cleanup();
         DSStick.cleanup();
         DSPointer.cleanup();
@@ -325,13 +297,13 @@ protected:
 	// methods: .cleanup() recreates them, while .destroy() delete them completely
 	void localCleanup() {
 		// Cleanup textures
-		T1.cleanup();
-		T2.cleanup();
+		TPointer.cleanup();
+        TFurniture.cleanup();
+        TP1Turn.cleanup();
+        TP2Turn.cleanup();
+        TStick.cleanup();
 		
 		// Cleanup models
-		M1.cleanup();
-		M2.cleanup();
-		M3.cleanup();
         MTable.cleanup();
         MStick.cleanup();
         MPointer.cleanup();
@@ -346,7 +318,8 @@ protected:
 		DSL.cleanup();
 		
 		// Destroies the pipelines
-		P.destroy();	
+		PBlinn.destroy();
+        POrenNayar.destroy();
         POverlay.destroy();
 	}
 	
@@ -355,14 +328,10 @@ protected:
 	// with their buffers and textures
 	
 	void populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage) {
-		// binds the pipeline
-		P.bind(commandBuffer);
-		// For a pipeline object, this command binds the corresponing pipeline to the command buffer passed in its parameter
-        
-        DSLighting.bind(commandBuffer, P, 0, currentImage);
 
-		// binds the data set
-		DS1.bind(commandBuffer, P, 1, currentImage);
+        DSLighting.bind(commandBuffer, PBlinn, 0, currentImage);
+        // DSLighting.bind(commandBuffer, POrenNayar, 0, currentImage);
+        
 		// For a Dataset object, this command binds the corresponing dataset
 		// to the command buffer and pipeline passed in its first and second parameters.
 		// The third parameter is the number of the set being bound
@@ -370,40 +339,26 @@ protected:
 		// This is done automatically in file Starter.hpp, however the command here needs also the index
 		// of the current image in the swap chain, passed in its last parameter
 					
-		// binds the model
-		M1.bind(commandBuffer);
 		// For a Model object, this command binds the corresponing index and vertex buffer
 		// to the command buffer passed in its parameter
-		
-		// record the drawing command in the command buffer
-		vkCmdDrawIndexed(commandBuffer,
-				static_cast<uint32_t>(M1.indices.size()), 1, 0, 0, 0);
 		// the second parameter is the number of indexes to be drawn. For a Model object,
 		// this can be retrieved with the .indices.size() method.
-
-		DS2.bind(commandBuffer, P, 1, currentImage);
-		M2.bind(commandBuffer);
-		vkCmdDrawIndexed(commandBuffer,
-				static_cast<uint32_t>(M2.indices.size()), 1, 0, 0, 0);
-		DS3.bind(commandBuffer, P, 1, currentImage);
-		M3.bind(commandBuffer);
-		vkCmdDrawIndexed(commandBuffer,
-				static_cast<uint32_t>(M3.indices.size()), 1, 0, 0, 0);
-        
-        DSTable.bind(commandBuffer, P, 1, currentImage);
+        POrenNayar.bind(commandBuffer);
+        DSTable.bind(commandBuffer, PBlinn, 1, currentImage);
         MTable.bind(commandBuffer);
         vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MTable.indices.size()), 1, 0, 0, 0);
         
-        DSStick.bind(commandBuffer, P, 1, currentImage);
+        PBlinn.bind(commandBuffer);
+        DSStick.bind(commandBuffer, PBlinn, 1, currentImage);
         MStick.bind(commandBuffer);
         vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MStick.indices.size()), 1, 0, 0, 0);
         
-        DSPointer.bind(commandBuffer, P, 1, currentImage);
+        DSPointer.bind(commandBuffer, PBlinn, 1, currentImage);
         MPointer.bind(commandBuffer);
         vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MPointer.indices.size()), 1, 0, 0, 0);
         
         for(auto &ball : balls) {
-            ball.descriptorSet.bind(commandBuffer, P, 1, currentImage);
+            ball.descriptorSet.bind(commandBuffer, PBlinn, 1, currentImage);
             ball.model.bind(commandBuffer);
             vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(ball.model.indices.size()), 1, 0, 0, 0);
         }
@@ -447,22 +402,10 @@ protected:
         
 		glm::mat4 World;
 
-        
-		World = glm::scale(glm::mat4(1), glm::vec3(0,0,0)) * glm::translate(glm::mat4(1), glm::vec3(-3, 0, 0)); // cube
-		ubo1.mvpMat = ViewProjection * World;
-		DS1.map(currentImage, &ubo1, sizeof(ubo1), 0);
 		// the .map() method of a DataSet object, requires the current image of the swap chain as first parameter
 		// the second parameter is the pointer to the C++ data structure to transfer to the GPU
 		// the third parameter is its size
 		// the fourth parameter is the location inside the descriptor set of this uniform block
-		World = glm::scale(glm::mat4(1), glm::vec3(0,0,0)) * glm::translate(glm::mat4(1), glm::vec3(3, 0, 0)); // sphere
-		ubo2.mvpMat = ViewProjection * World;
-		DS2.map(currentImage, &ubo2, sizeof(ubo2), 0);
-		
-		World = glm::scale(glm::mat4(1), glm::vec3(0,0,0)) * glm::scale(glm::mat4(1), glm::vec3(10.0f)); // dish
-		ubo3.mvpMat = ViewProjection * World;
-		DS3.map(currentImage, &ubo3, sizeof(ubo3), 0);
-        
         World = glm::translate(glm::mat4(1), glm::vec3(0, -1, 0)) * // Table
                 glm::scale(glm::mat4(1), glm::vec3(7.0f));
         uboTable.mvpMat = ViewProjection * World;

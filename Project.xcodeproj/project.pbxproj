@@ -67,15 +67,11 @@
 		E85856ED2B683C4600EA3D79 /* Overlay.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Overlay.frag; sourceTree = "<group>"; };
 		E85856EE2B683C4600EA3D79 /* OverlayFrag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OverlayFrag.spv; sourceTree = "<group>"; };
 		E85856EF2B683C4600EA3D79 /* Overlay.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Overlay.vert; sourceTree = "<group>"; };
-		E87C74722B5FF96D00146B4B /* log_Mesh.965.mgcg */ = {isa = PBXFileReference; lastKnownFileType = file; path = log_Mesh.965.mgcg; sourceTree = "<group>"; };
-		E87C74732B5FFA7100146B4B /* Textures_Dungeon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Textures_Dungeon.png; sourceTree = "<group>"; };
 		E87C74752B60087C00146B4B /* Cube_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cube_color.png; sourceTree = "<group>"; };
 		E87C74762B60096600146B4B /* billiardtable-TurboSquid.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "billiardtable-TurboSquid.obj"; sourceTree = "<group>"; };
 		E87C74772B60096600146B4B /* Table.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Table.png; sourceTree = "<group>"; };
 		E87C747A2B60126C00146B4B /* ball_8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball_8.png; sourceTree = "<group>"; };
 		E87C747E2B6015B500146B4B /* ball.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ball.obj; sourceTree = "<group>"; };
-		E887AFB82B56DCE800A1C372 /* Checker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Checker.png; sourceTree = "<group>"; };
-		E887AFB92B56DCE800A1C372 /* Textures_Food.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Textures_Food.png; sourceTree = "<group>"; };
 		E887AFBB2B56DCEA00A1C372 /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
 		E887AFBC2B56DCEA00A1C372 /* stb_image_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
 		E887AFBD2B56DCEA00A1C372 /* sdefl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sdefl.h; sourceTree = "<group>"; };
@@ -450,20 +446,14 @@
 		E887B1342B56DCEB00A1C372 /* projection.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = projection.inl; sourceTree = "<group>"; };
 		E887B1352B56DCEB00A1C372 /* type_aligned.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = type_aligned.hpp; sourceTree = "<group>"; };
 		E887B1362B56DCEB00A1C372 /* tiny_obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tiny_obj_loader.h; sourceTree = "<group>"; };
-		E887B1382B56DCEB00A1C372 /* Cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.obj; sourceTree = "<group>"; };
-		E887B1392B56DCEB00A1C372 /* dish.005_Mesh.098.mgcg */ = {isa = PBXFileReference; lastKnownFileType = file; path = dish.005_Mesh.098.mgcg; sourceTree = "<group>"; };
-		E887B13A2B56DCEB00A1C372 /* Sphere.gltf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.gltf; sourceTree = "<group>"; };
 		E887B13B2B56DCEB00A1C372 /* Starter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Starter.hpp; sourceTree = "<group>"; };
-		E887B13D2B56DCEC00A1C372 /* Shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.vert; sourceTree = "<group>"; };
-		E887B13E2B56DCEC00A1C372 /* ShaderVert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = ShaderVert.spv; sourceTree = "<group>"; };
-		E887B13F2B56DCEC00A1C372 /* Shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.frag; sourceTree = "<group>"; };
-		E887B1402B56DCEC00A1C372 /* ShaderFrag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = ShaderFrag.spv; sourceTree = "<group>"; };
+		E887B13D2B56DCEC00A1C372 /* Blinn.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Blinn.vert; sourceTree = "<group>"; };
+		E887B13F2B56DCEC00A1C372 /* Blinn.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Blinn.frag; sourceTree = "<group>"; };
 		E887B1412B56DCEC00A1C372 /* MeshLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshLoader.cpp; sourceTree = "<group>"; };
-		E887B1442B56E60E00A1C372 /* coffee_table_019_Mesh.6459.mgcg */ = {isa = PBXFileReference; lastKnownFileType = file; path = coffee_table_019_Mesh.6459.mgcg; sourceTree = "<group>"; };
-		E887B1452B56E69800A1C372 /* Textures_Forniture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Textures_Forniture.png; sourceTree = "<group>"; };
 		E887B1462B56ED0500A1C372 /* Ball.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Ball.cpp; sourceTree = "<group>"; };
 		E8CA12B52B714274007DA52C /* BilliardStick_DefaultMaterial_AlbedoTransparency.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BilliardStick_DefaultMaterial_AlbedoTransparency.png; sourceTree = "<group>"; };
 		E8CA12B82B714553007DA52C /* stick.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = stick.obj; sourceTree = "<group>"; };
+		E8CA12B92B718449007DA52C /* OrenNayar.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = OrenNayar.frag; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -543,10 +533,6 @@
 				E80DD32E2B699F750006E0A4 /* ball_14.png */,
 				E80DD33A2B699F770006E0A4 /* ball_15.png */,
 				E87C74772B60096600146B4B /* Table.png */,
-				E887AFB82B56DCE800A1C372 /* Checker.png */,
-				E887AFB92B56DCE800A1C372 /* Textures_Food.png */,
-				E87C74732B5FFA7100146B4B /* Textures_Dungeon.png */,
-				E887B1452B56E69800A1C372 /* Textures_Forniture.png */,
 			);
 			path = textures;
 			sourceTree = "<group>";
@@ -985,11 +971,6 @@
 			children = (
 				E8CA12B82B714553007DA52C /* stick.obj */,
 				E87C74762B60096600146B4B /* billiardtable-TurboSquid.obj */,
-				E87C74722B5FF96D00146B4B /* log_Mesh.965.mgcg */,
-				E887B1382B56DCEB00A1C372 /* Cube.obj */,
-				E887B1392B56DCEB00A1C372 /* dish.005_Mesh.098.mgcg */,
-				E887B13A2B56DCEB00A1C372 /* Sphere.gltf */,
-				E887B1442B56E60E00A1C372 /* coffee_table_019_Mesh.6459.mgcg */,
 				E87C747E2B6015B500146B4B /* ball.obj */,
 			);
 			path = models;
@@ -1002,10 +983,9 @@
 				E85856EF2B683C4600EA3D79 /* Overlay.vert */,
 				E85856EE2B683C4600EA3D79 /* OverlayFrag.spv */,
 				E85856EC2B683C4500EA3D79 /* OverlayVert.spv */,
-				E887B13D2B56DCEC00A1C372 /* Shader.vert */,
-				E887B13E2B56DCEC00A1C372 /* ShaderVert.spv */,
-				E887B13F2B56DCEC00A1C372 /* Shader.frag */,
-				E887B1402B56DCEC00A1C372 /* ShaderFrag.spv */,
+				E887B13D2B56DCEC00A1C372 /* Blinn.vert */,
+				E887B13F2B56DCEC00A1C372 /* Blinn.frag */,
+				E8CA12B92B718449007DA52C /* OrenNayar.frag */,
 			);
 			path = shaders;
 			sourceTree = "<group>";
