@@ -219,7 +219,7 @@ void GameLogic::computeFrame(float deltaT) {
     
 }
 
-glm::mat4 GameLogic::computeArrowWorldMatrix() {
+glm::mat4 GameLogic::computeStickWorldMatrix() {
     if(!aiming)
         return glm::scale(glm::mat4(1), glm::vec3(0,0,0));
     

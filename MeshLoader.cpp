@@ -60,15 +60,15 @@ protected:
     // Models, textures and Descriptors (values assigned to the uniforms)
     // Please note that Model objects depends on the corresponding vertex structure
     // Models
-    Model<Vertex> M1, M2, M3, M4, MTable, MArrow, MPointer;
+    Model<Vertex> M1, M2, M3, M4, MTable, MStick, MPointer;
     Model<VertexOverlay> MP1Turn, MP2Turn;
     // Descriptor sets
-    DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSArrow, DSPointer, DSP1Turn, DSP2Turn;
+    DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSStick, DSPointer, DSP1Turn, DSP2Turn;
     // Textures
-    Texture T1, T2, TFurniture, TDungeon, TP1Turn, TP2Turn;
+    Texture T1, T2, TFurniture, TDungeon, TP1Turn, TP2Turn, TStick;
     
     // C++ storage for uniform variables
-    UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable, uboArrow, uboPointer;
+    UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable, uboStick, uboPointer;
     OverlayUniformBlock uboP1Turn, uboP2Turn;
     
     // Other application parameters
@@ -186,7 +186,7 @@ protected:
         for (auto &ball : balls) {
             ball.model.init(this, &VD, "Models/ball.obj", OBJ);
         }
-        MArrow.init(this, &VD, "models/log_Mesh.965.mgcg", MGCG);
+        MStick.init(this, &VD, "models/stick.obj", OBJ);
         MPointer.init(this, &VD, "models/Sphere.gltf", GLTF);
         
         auto margin = 0.05f;
@@ -206,6 +206,7 @@ protected:
         T2.init(this,   "textures/Textures_Food.png");
         TFurniture.init(this, "textures/Table.png");
         TDungeon.init(this, "textures/Textures_Dungeon.png");
+        TStick.init(this, "textures/BilliardStick_DefaultMaterial_AlbedoTransparency.png");
         int id = 0;
         for (auto &ball : balls) {
             std::string path = "textures/ball_" + std::to_string(id++) + ".png";
@@ -253,9 +254,9 @@ protected:
             {0, UNIFORM, sizeof(UniformBlock), nullptr},
             {1, TEXTURE, 0, &TFurniture}
         });
-        DSArrow.init(this, &DSL, {
+        DSStick.init(this, &DSL, {
             {0, UNIFORM, sizeof(UniformBlock), nullptr},
-            {1, TEXTURE, 0, &TDungeon}
+            {1, TEXTURE, 0, &TStick}
         });
         DSPointer.init(this, &DSL, {
             {0, UNIFORM, sizeof(UniformBlock), nullptr},
@@ -291,7 +292,7 @@ protected:
 		DS3.cleanup();
 		DS4.cleanup();
         DSTable.cleanup();
-        DSArrow.cleanup();
+        DSStick.cleanup();
         DSPointer.cleanup();
         DSP1Turn.cleanup();
         DSP2Turn.cleanup();
@@ -316,7 +317,7 @@ protected:
 		M3.cleanup();
 		M4.cleanup();
         MTable.cleanup();
-        MArrow.cleanup();
+        MStick.cleanup();
         MPointer.cleanup();
         MP1Turn.cleanup();
         MP2Turn.cleanup();
@@ -379,9 +380,9 @@ protected:
         MTable.bind(commandBuffer);
         vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MTable.indices.size()), 1, 0, 0, 0);
         
-        DSArrow.bind(commandBuffer, P, 0, currentImage);
-        MArrow.bind(commandBuffer);
-        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MArrow.indices.size()), 1, 0, 0, 0);
+        DSStick.bind(commandBuffer, P, 0, currentImage);
+        MStick.bind(commandBuffer);
+        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MStick.indices.size()), 1, 0, 0, 0);
         
         DSPointer.bind(commandBuffer, P, 0, currentImage);
         MPointer.bind(commandBuffer);
@@ -458,9 +459,9 @@ protected:
         uboTable.mvpMat = ViewProjection * World;
         DSTable.map(currentImage, &uboTable, sizeof(uboTable), 0);
         
-        World = gameLogic.computeArrowWorldMatrix();
-        uboArrow.mvpMat = ViewProjection * World;
-        DSArrow.map(currentImage, &uboArrow, sizeof(uboArrow), 0);
+        World = gameLogic.computeStickWorldMatrix() * glm::scale(glm::mat4(1), glm::vec3(2));
+        uboStick.mvpMat = ViewProjection * World;
+        DSStick.map(currentImage, &uboStick, sizeof(uboStick), 0);
         
         World = gameLogic.pointerWorldMatrix();
         uboPointer.mvpMat = ViewProjection * World;

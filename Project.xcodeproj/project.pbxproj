@@ -462,6 +462,8 @@
 		E887B1442B56E60E00A1C372 /* coffee_table_019_Mesh.6459.mgcg */ = {isa = PBXFileReference; lastKnownFileType = file; path = coffee_table_019_Mesh.6459.mgcg; sourceTree = "<group>"; };
 		E887B1452B56E69800A1C372 /* Textures_Forniture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Textures_Forniture.png; sourceTree = "<group>"; };
 		E887B1462B56ED0500A1C372 /* Ball.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Ball.cpp; sourceTree = "<group>"; };
+		E8CA12B52B714274007DA52C /* BilliardStick_DefaultMaterial_AlbedoTransparency.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BilliardStick_DefaultMaterial_AlbedoTransparency.png; sourceTree = "<group>"; };
+		E8CA12B82B714553007DA52C /* stick.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = stick.obj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -520,6 +522,7 @@
 		E887AFB72B56DCE800A1C372 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				E8CA12B52B714274007DA52C /* BilliardStick_DefaultMaterial_AlbedoTransparency.png */,
 				E80DD33B2B69A0110006E0A4 /* ball_0.png */,
 				E80DD31D2B6994F70006E0A4 /* Player_2_turn.png */,
 				E80DD31C2B698F550006E0A4 /* Player_1_turn.png */,
@@ -980,6 +983,7 @@
 		E887B1372B56DCEB00A1C372 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				E8CA12B82B714553007DA52C /* stick.obj */,
 				E87C74762B60096600146B4B /* billiardtable-TurboSquid.obj */,
 				E87C74722B5FF96D00146B4B /* log_Mesh.965.mgcg */,
 				E887B1382B56DCEB00A1C372 /* Cube.obj */,
