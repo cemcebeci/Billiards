@@ -27,7 +27,7 @@ struct Ball
 {
     int id = -1;
     glm::vec2 position;
-    glm::quat rotation = glm::quat(glm::vec3(0,0,0));
+    glm::mat4 rotation = glm::mat4(1);
     glm::vec2 velocity = glm::vec2(0);
     float radius = 1; // in logical units.
     Hole* inHole = nullptr;

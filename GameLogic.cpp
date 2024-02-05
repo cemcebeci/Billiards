@@ -210,7 +210,10 @@ void GameLogic::computeFrame(float deltaT) {
             auto axis = glm::vec3(ball.velocity.y, 0, ball.velocity.x);
             auto amount = glm::length(ball.velocity) * deltaT / ball.radius / 2;
             std::cout << amount << "\n";
-            ball.rotation = glm::rotate(ball.rotation, -amount, axis);
+                
+            auto rotator = glm::rotate(glm::mat4(1), -amount, axis);
+
+            ball.rotation = rotator * ball.rotation;
         }
     }
     
