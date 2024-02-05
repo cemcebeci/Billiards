@@ -15,16 +15,31 @@
 // Example:
 struct UniformBlock {
 	alignas(16) glm::mat4 mvpMat;
+    alignas(16) glm::mat4 wMat;
+    alignas(16) glm::mat4 nMat = glm::mat4(1);
 };
 
 struct OverlayUniformBlock {
     alignas(4) float visible;
 };
 
+struct LightingUniformBlock {
+    
+};
+
+struct SpotlightUniformBufferObject {
+    alignas(16) glm::vec3 lightPos;
+    alignas(16) glm::vec3 lightDir;
+    alignas(16) glm::vec4 lightColor;
+    alignas(16) glm::vec3 eyePos;
+};
+
+
 // The vertices data structures
 // Example
 struct Vertex {
 	glm::vec3 pos;
+    glm::vec3 norm;
 	glm::vec2 UV;
 };
 
@@ -47,7 +62,7 @@ class MeshLoader : public BaseProject {
 protected:
     
     // Descriptor Layouts ["classes" of what will be passed to the shaders]
-    DescriptorSetLayout DSL;
+    DescriptorSetLayout DSL, DSLLighting;
     
     // Vertex formats
     VertexDescriptor VD;
@@ -60,16 +75,17 @@ protected:
     // Models, textures and Descriptors (values assigned to the uniforms)
     // Please note that Model objects depends on the corresponding vertex structure
     // Models
-    Model<Vertex> M1, M2, M3, M4, MTable, MStick, MPointer;
+    Model<Vertex> M1, M2, M3, MTable, MStick, MPointer;
     Model<VertexOverlay> MP1Turn, MP2Turn;
     // Descriptor sets
-    DescriptorSet DS1, DS2, DS3, DS4, DSTable, DSStick, DSPointer, DSP1Turn, DSP2Turn;
+    DescriptorSet DS1, DS2, DS3, DSTable, DSStick, DSPointer, DSP1Turn, DSP2Turn, DSLighting;
     // Textures
     Texture T1, T2, TFurniture, TDungeon, TP1Turn, TP2Turn, TStick;
     
     // C++ storage for uniform variables
-    UniformBlock ubo1, ubo2, ubo3, ubo4, uboTable, uboStick, uboPointer;
+    UniformBlock ubo1, ubo2, ubo3, uboTable, uboStick, uboPointer;
     OverlayUniformBlock uboP1Turn, uboP2Turn;
+    SpotlightUniformBufferObject uboLighting;
     
     // Other application parameters
     BallObject balls[NUM_BALLS];
@@ -85,9 +101,9 @@ protected:
         initialBackgroundColor = {0.0f, 0.005f, 0.01f, 1.0f};
         
         // Descriptor pool sizes
-        uniformBlocksInPool = 9 + NUM_BALLS;
-        texturesInPool = 10 + NUM_BALLS + NUM_BALLS;
-        setsInPool = 9 + NUM_BALLS;
+        uniformBlocksInPool = 10 + NUM_BALLS;
+        texturesInPool = 11 + NUM_BALLS + NUM_BALLS;
+        setsInPool = 10 + NUM_BALLS;
         
         camera.aspectRatio = (float)windowWidth / (float)windowHeight;
     }
@@ -110,6 +126,10 @@ protected:
             //                  using the corresponding Vulkan constant
             {0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS},
             {1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT}
+        });
+        
+        DSLLighting.init(this , {
+            {0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS}
         });
         
         // Vertex descriptors
@@ -143,7 +163,8 @@ protected:
             // ***************************************************
             {0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos),
                 sizeof(glm::vec3), POSITION},
-            {0, 1, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, UV),
+            {0, 1, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, norm), sizeof(glm::vec3), NORMAL},
+            {0, 2, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, UV),
                 sizeof(glm::vec2), UV}
         });
         
@@ -161,7 +182,7 @@ protected:
         // Third and fourth parameters are respectively the vertex and fragment shaders
         // The last array, is a vector of pointer to the layouts of the sets that will
         // be used in this pipeline. The first element will be set 0, and so on..
-        P.init(this, &VD, "shaders/ShaderVert.spv", "shaders/ShaderFrag.spv", {&DSL});
+        P.init(this, &VD, "shaders/ShaderVert.spv", "shaders/ShaderFrag.spv", {&DSLLighting, &DSL});
         POverlay.init(this, &VOverlay, "shaders/OverlayVert.spv", "Shaders/OverlayFrag.spv", {&DSL});
         POverlay.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
                                      VK_CULL_MODE_NONE, false);
@@ -176,11 +197,6 @@ protected:
         M2.init(this,   &VD, "Models/Sphere.gltf", GLTF);
         M3.init(this,   &VD, "Models/dish.005_Mesh.098.mgcg", MGCG);
         
-        // Creates a mesh with direct enumeration of vertices and indices
-        M4.vertices = {{{-6,-2,-6}, {0.0f,0.0f}}, {{-6,-2,6}, {0.0f,1.0f}},
-            {{6,-2,-6}, {1.0f,0.0f}}, {{ 6,-2,6}, {1.0f,1.0f}}};
-        M4.indices = {0, 1, 2,    1, 3, 2};
-        M4.initMesh(this, &VD);
         
         MTable.init(this, &VD, "models/billiardtable-TurboSquid.obj", OBJ);
         for (auto &ball : balls) {
@@ -246,10 +262,7 @@ protected:
 					{0, UNIFORM, sizeof(UniformBlock), nullptr},
 					{1, TEXTURE, 0, &T2}
 				});
-		DS4.init(this, &DSL, {
-					{0, UNIFORM, sizeof(UniformBlock), nullptr},
-					{1, TEXTURE, 0, &T1}
-				});
+        
         DSTable.init(this, &DSL, {
             {0, UNIFORM, sizeof(UniformBlock), nullptr},
             {1, TEXTURE, 0, &TFurniture}
@@ -277,6 +290,10 @@ protected:
                 {1, TEXTURE, 0, &ball.tex}
             });
         }
+        
+        DSLighting.init(this, &DSLLighting, {
+            {0, UNIFORM, sizeof(SpotlightUniformBufferObject), nullptr}
+        });
 	}
 
 	// Here you destroy your pipelines and Descriptor Sets!
@@ -290,12 +307,12 @@ protected:
 		DS1.cleanup();
 		DS2.cleanup();
 		DS3.cleanup();
-		DS4.cleanup();
         DSTable.cleanup();
         DSStick.cleanup();
         DSPointer.cleanup();
         DSP1Turn.cleanup();
         DSP2Turn.cleanup();
+        DSLighting.cleanup();
         
         for(auto &ball : balls) {
             ball.descriptorSet.cleanup();
@@ -315,7 +332,6 @@ protected:
 		M1.cleanup();
 		M2.cleanup();
 		M3.cleanup();
-		M4.cleanup();
         MTable.cleanup();
         MStick.cleanup();
         MPointer.cleanup();
@@ -331,7 +347,7 @@ protected:
 		
 		// Destroies the pipelines
 		P.destroy();	
-        P.destroy();
+        POverlay.destroy();
 	}
 	
 	// Here it is the creation of the command buffer:
@@ -342,9 +358,11 @@ protected:
 		// binds the pipeline
 		P.bind(commandBuffer);
 		// For a pipeline object, this command binds the corresponing pipeline to the command buffer passed in its parameter
+        
+        DSLighting.bind(commandBuffer, P, 0, currentImage);
 
 		// binds the data set
-		DS1.bind(commandBuffer, P, 0, currentImage);
+		DS1.bind(commandBuffer, P, 1, currentImage);
 		// For a Dataset object, this command binds the corresponing dataset
 		// to the command buffer and pipeline passed in its first and second parameters.
 		// The third parameter is the number of the set being bound
@@ -363,33 +381,29 @@ protected:
 		// the second parameter is the number of indexes to be drawn. For a Model object,
 		// this can be retrieved with the .indices.size() method.
 
-		DS2.bind(commandBuffer, P, 0, currentImage);
+		DS2.bind(commandBuffer, P, 1, currentImage);
 		M2.bind(commandBuffer);
 		vkCmdDrawIndexed(commandBuffer,
 				static_cast<uint32_t>(M2.indices.size()), 1, 0, 0, 0);
-		DS3.bind(commandBuffer, P, 0, currentImage);
+		DS3.bind(commandBuffer, P, 1, currentImage);
 		M3.bind(commandBuffer);
 		vkCmdDrawIndexed(commandBuffer,
 				static_cast<uint32_t>(M3.indices.size()), 1, 0, 0, 0);
-		DS4.bind(commandBuffer, P, 0, currentImage);
-		M4.bind(commandBuffer);
-		vkCmdDrawIndexed(commandBuffer,
-				static_cast<uint32_t>(M4.indices.size()), 1, 0, 0, 0);
         
-        DSTable.bind(commandBuffer, P, 0, currentImage);
+        DSTable.bind(commandBuffer, P, 1, currentImage);
         MTable.bind(commandBuffer);
         vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MTable.indices.size()), 1, 0, 0, 0);
         
-        DSStick.bind(commandBuffer, P, 0, currentImage);
+        DSStick.bind(commandBuffer, P, 1, currentImage);
         MStick.bind(commandBuffer);
         vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MStick.indices.size()), 1, 0, 0, 0);
         
-        DSPointer.bind(commandBuffer, P, 0, currentImage);
+        DSPointer.bind(commandBuffer, P, 1, currentImage);
         MPointer.bind(commandBuffer);
         vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MPointer.indices.size()), 1, 0, 0, 0);
         
         for(auto &ball : balls) {
-            ball.descriptorSet.bind(commandBuffer, P, 0, currentImage);
+            ball.descriptorSet.bind(commandBuffer, P, 1, currentImage);
             ball.model.bind(commandBuffer);
             vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(ball.model.indices.size()), 1, 0, 0, 0);
         }
@@ -448,28 +462,32 @@ protected:
 		World = glm::scale(glm::mat4(1), glm::vec3(0,0,0)) * glm::scale(glm::mat4(1), glm::vec3(10.0f)); // dish
 		ubo3.mvpMat = ViewProjection * World;
 		DS3.map(currentImage, &ubo3, sizeof(ubo3), 0);
-
-		World = glm::scale(glm::mat4(1), glm::vec3(0,0,0)) * glm::translate(glm::mat4(1), glm::vec3(0, -5, 0)) * // rectangle
-				glm::scale(glm::mat4(1), glm::vec3(5.0f));
-		ubo4.mvpMat = ViewProjection * World;
-		DS4.map(currentImage, &ubo4, sizeof(ubo4), 0);
         
         World = glm::translate(glm::mat4(1), glm::vec3(0, -1, 0)) * // Table
                 glm::scale(glm::mat4(1), glm::vec3(7.0f));
         uboTable.mvpMat = ViewProjection * World;
+        uboTable.wMat = World;
+        uboTable.nMat = glm::inverse(glm::transpose(World));
         DSTable.map(currentImage, &uboTable, sizeof(uboTable), 0);
         
         World = gameLogic.computeStickWorldMatrix() * glm::scale(glm::mat4(1), glm::vec3(2));
         uboStick.mvpMat = ViewProjection * World;
+        uboStick.wMat = World;
+        uboStick.nMat = glm::inverse(glm::transpose(World));
         DSStick.map(currentImage, &uboStick, sizeof(uboStick), 0);
+
         
         World = gameLogic.pointerWorldMatrix();
         uboPointer.mvpMat = ViewProjection * World;
+        uboPointer.wMat = World;
+        uboPointer.nMat = glm::inverse(glm::transpose(World));
         DSPointer.map(currentImage, &uboPointer, sizeof(uboPointer), 0);
         
         for (int i = 0; i < NUM_BALLS; i++) {
             BallObject &obj = balls[i];
             obj.ubo.mvpMat = ViewProjection * gameLogic.getBall(i).computeWorldMatrix();
+            obj.ubo.nMat = glm::inverse(glm::transpose(/*viewMatrix(camera) * */ gameLogic.getBall(i).computeWorldMatrix()));
+            obj.ubo.wMat = gameLogic.getBall(i).computeWorldMatrix();
             obj.descriptorSet.map(currentImage, &obj.ubo, sizeof(obj.ubo), 0);
         }
         
@@ -478,6 +496,12 @@ protected:
         
         uboP2Turn.visible = (gameLogic.getCurrentPlayer() == 1) ? 1.0f : 0.0f;
         DSP2Turn.map(currentImage, &uboP2Turn, sizeof(uboP2Turn), 0);
+        
+        uboLighting.lightPos = glm::vec3(0, 10, 0);
+        uboLighting.lightColor = glm::vec4(1, 1, 1, 1);
+        uboLighting.lightDir = glm::vec3(0,-1,0);
+        uboLighting.eyePos = camera.position;
+        DSLighting.map(currentImage, &uboLighting, sizeof(uboLighting), 0);
 	}
 };
 
