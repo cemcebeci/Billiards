@@ -57,6 +57,7 @@ void main() {
     vec3 lightColor = gubo.lightColor.rgb * pow(g / distance, beta) * dimmingTerm;
 
     vec3 DiffSpec = BRDF(EyeDir, Norm, lightDir, texture(tex, fragUV).rgb, 1.1f);
+    vec3 Ambient = texture(tex, fragUV).rgb * 0.15f;
     
-    outColor = vec4(clamp(0.95 * (DiffSpec) * lightColor.rgb ,0.0,1.0), 1.0f);
+    outColor = vec4(clamp(0.95 * (DiffSpec + Ambient) * lightColor.rgb ,0.0,1.0), 1.0f);
 }
