@@ -60,15 +60,40 @@ bool GameLogic::allBallsAreStill() {
     return true;
 }
 
+void GameLogic::handle8Pocket(int pocketingPlayer) {
+    if(pocketingPlayer == 0) {
+        for (int i = 0; i < NUM_BALLS; i++) {
+            if(balls[i].getType() == p1Color && balls[i].inHole == nullptr) {
+                winner = 1;
+                return;
+            }
+        }
+        winner = 0;
+        return;
+    }
+    for (int i = 1; i < 8; i++) {
+        if(balls[i].inHole == nullptr &&
+           (balls[i].getType() != p1Color ||
+            balls[i].getType() != Ball::CUE ||
+            balls[i].getType() != Ball::EIGHT)
+        ) {
+            winner = 1;
+            return;
+        }
+    }
+    winner = 0;
+    return;
+}
+
 void GameLogic::handleScore(Ball& ball, Hole& hole) {
     ball.inHole = &hole;
     ball.animatingFall = true;
     
     if (ball.getType() == Ball::CUE) {
         faultThisShot = true;
+        return;
     }
     if (ball.getType() == Ball::EIGHT) {
-        // TODO
         return;
     }
     
@@ -141,12 +166,14 @@ void GameLogic::updateGame(Input input) {
                 balls[0].velocity = glm::vec2(0);
                 balls[0].inHole = nullptr;
                 balls[0].hide = false;
+                checkCollisions();
             }
             
             aiming = true;
             scoredThisShot = false;
             faultThisShot = false;
             touchedABallThisShot = false;
+            firstShot = false;
         }
     }
 }
@@ -176,20 +203,23 @@ void GameLogic::handleBallCollision(Ball& b1, Ball&b2) {
     }
 }
 
-void applyAnimation(Ball& ball, float deltaT) {
+void GameLogic::applyAnimation(Ball& ball, float deltaT) {
     Hole hole = *ball.inHole;
-    std::cout << glm::distance(ball.position, hole.position) << "\n";
     if(glm::distance(ball.position, hole.position) > 0.1) {
         glm::vec2 direction = glm::normalize( hole.position - ball.position);
         ball.position += direction * deltaT * glm::length(ball.velocity);
     } else {
         ball.animatingFall = false;
         ball.hide = true;
+        if(ball.getType() == Ball::EIGHT) {
+            handle8Pocket(currentPlayer);
+            std::cout << "Winner: " << winner;
+        }
     }
         
 }
 
-void GameLogic::computeFrame(float deltaT) {
+void GameLogic::checkCollisions() {
     // check edge collisions
     for(auto &ball : balls) {
         if(ball.inHole != nullptr)
@@ -227,6 +257,10 @@ void GameLogic::computeFrame(float deltaT) {
             }
         }
     }
+}
+
+void GameLogic::computeFrame(float deltaT) {
+    checkCollisions();
     
     // apply friction
     for (auto &ball : balls) {
@@ -261,7 +295,7 @@ void GameLogic::computeFrame(float deltaT) {
         if(glm::length(ball.velocity) > 0) {
             auto axis = glm::vec3(ball.velocity.y, 0, ball.velocity.x);
             auto amount = glm::length(ball.velocity) * deltaT / ball.radius / 2;
-            std::cout << amount << "\n";
+
                 
             auto rotator = glm::rotate(glm::mat4(1), -amount, axis);
 

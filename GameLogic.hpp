@@ -63,6 +63,12 @@ public:
     glm::mat4 computeStickWorldMatrix();
     glm::mat4 pointerWorldMatrix();
     int getCurrentPlayer() {return currentPlayer;}
+    Ball::BallType getTargetType() {
+        if(!colorsChosen) return Ball::CUE;
+        if(currentPlayer == 0) return p1Color;
+        else return (p1Color == Ball::FULL) ? Ball::STRIPE : Ball::FULL;
+    }
+    int getWinner() {return winner;}
     
     
 private:
@@ -76,6 +82,8 @@ private:
     bool scoredThisShot = false;
     bool faultThisShot = false;
     bool touchedABallThisShot = false;
+    int winner = -1;
+    bool firstShot = true;
     
     Ball::BallType p1Color;
     bool colorsChosen;
@@ -85,6 +93,9 @@ private:
     void checkWhetherAnyBallsGoIn();
     void handleScore(Ball&, Hole&);
     void handleBallCollision(Ball& b1, Ball&b2);
+    void handle8Pocket(int pocketingPlayer);
+    void applyAnimation(Ball& ball, float deltaT);
+    void checkCollisions();
     
     void initBalls();
     void initHoles();

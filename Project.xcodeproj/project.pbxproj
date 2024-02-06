@@ -63,6 +63,10 @@
 		E828E2F82B5991EE00F5A42D /* Camera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
 		E828E2F92B59925200F5A42D /* Input.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Input.hpp; sourceTree = "<group>"; };
 		E828E2FA2B59979B00F5A42D /* GameLogic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameLogic.cpp; sourceTree = "<group>"; };
+		E84FC4D02B72804D00746484 /* Player_2_win.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Player_2_win.png; sourceTree = "<group>"; };
+		E84FC4D12B72804E00746484 /* Hit_solids.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Hit_solids.png; sourceTree = "<group>"; };
+		E84FC4D22B72804E00746484 /* Hit_stripes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Hit_stripes.png; sourceTree = "<group>"; };
+		E84FC4D32B72804E00746484 /* Player_1_win.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Player_1_win.png; sourceTree = "<group>"; };
 		E85856EC2B683C4500EA3D79 /* OverlayVert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OverlayVert.spv; sourceTree = "<group>"; };
 		E85856ED2B683C4600EA3D79 /* Overlay.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Overlay.frag; sourceTree = "<group>"; };
 		E85856EE2B683C4600EA3D79 /* OverlayFrag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OverlayFrag.spv; sourceTree = "<group>"; };
@@ -512,6 +516,10 @@
 		E887AFB72B56DCE800A1C372 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				E84FC4D12B72804E00746484 /* Hit_solids.png */,
+				E84FC4D22B72804E00746484 /* Hit_stripes.png */,
+				E84FC4D32B72804E00746484 /* Player_1_win.png */,
+				E84FC4D02B72804D00746484 /* Player_2_win.png */,
 				E8CA12B52B714274007DA52C /* BilliardStick_DefaultMaterial_AlbedoTransparency.png */,
 				E80DD33B2B69A0110006E0A4 /* ball_0.png */,
 				E80DD31D2B6994F70006E0A4 /* Player_2_turn.png */,
