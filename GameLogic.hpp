@@ -34,6 +34,15 @@ struct Ball
     bool animatingFall = false;
     bool hide = false;
     
+    enum BallType {CUE, EIGHT, FULL, STRIPE};
+
+    BallType getType() {
+        if(id == 0) return CUE;
+        if(id < 8) return FULL;
+        if(id == 8) return EIGHT;
+        return STRIPE;
+    }
+    
     glm::mat4 computeWorldMatrix() {
         if(hide)
             return glm::scale(glm::mat4(1), glm::vec3(0));
@@ -64,11 +73,18 @@ private:
     float direction = 0.0f;
     float chargeTime;
     int currentPlayer = 0;
+    bool scoredThisShot = false;
+    bool faultThisShot = false;
+    bool touchedABallThisShot = false;
+    
+    Ball::BallType p1Color;
+    bool colorsChosen;
     
     void computeFrame(float deltaT);
     bool allBallsAreStill();
     void checkWhetherAnyBallsGoIn();
     void handleScore(Ball&, Hole&);
+    void handleBallCollision(Ball& b1, Ball&b2);
     
     void initBalls();
     void initHoles();

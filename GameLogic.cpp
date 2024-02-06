@@ -63,10 +63,34 @@ bool GameLogic::allBallsAreStill() {
 void GameLogic::handleScore(Ball& ball, Hole& hole) {
     ball.inHole = &hole;
     ball.animatingFall = true;
+    
+    if (ball.getType() == Ball::CUE) {
+        faultThisShot = true;
+    }
+    if (ball.getType() == Ball::EIGHT) {
+        // TODO
+        return;
+    }
+    
+    if(!colorsChosen) {
+        colorsChosen = true;
+        if(currentPlayer == 0) {
+            p1Color = ball.getType();
+        } else {
+            p1Color = (ball.getType() == Ball::FULL) ? Ball::STRIPE : Ball::FULL;
+        }
+    }
+    
+    if ((currentPlayer == 0 && ball.getType() == p1Color)
+        || (currentPlayer == 1 && ball.getType() != p1Color)) {
+        scoredThisShot = true;
+    }
 }
 
 void GameLogic::checkWhetherAnyBallsGoIn() {
     for( auto &ball : balls) {
+        if (ball.inHole != nullptr)
+            continue;
         for( auto &hole : holes) {
             if (glm::distance(ball.position, hole.position) < hole.radius) {
                 handleScore(ball, hole);
@@ -103,12 +127,31 @@ void GameLogic::updateGame(Input input) {
         checkWhetherAnyBallsGoIn();
         computeFrame(input.deltaT);
         if( allBallsAreStill()) {
+            // finished pyhsics simulation
+            if ( !scoredThisShot || faultThisShot) {
+                currentPlayer = 1 - currentPlayer;
+            }
+            
+            if(!touchedABallThisShot)
+                faultThisShot = true;
+            
+            if( faultThisShot) {
+                // TODO animate?
+                balls[0].position = glm::vec2(0,    -6);
+                balls[0].velocity = glm::vec2(0);
+                balls[0].inHole = nullptr;
+                balls[0].hide = false;
+            }
+            
             aiming = true;
+            scoredThisShot = false;
+            faultThisShot = false;
+            touchedABallThisShot = false;
         }
     }
 }
 
-void handleBallCollision(Ball& b1, Ball&b2) {
+void GameLogic::handleBallCollision(Ball& b1, Ball&b2) {
     glm::vec2 collision_vector = b2.position - b1.position;
     float correction = (b1.radius + b2.radius - glm::length(collision_vector)) / 2.0;
     glm::vec2 normal = glm::normalize(collision_vector);
@@ -122,6 +165,15 @@ void handleBallCollision(Ball& b1, Ball&b2) {
     
     b1.velocity = newB1Velocity;
     b2.velocity = newB2Velocity;
+    
+    if(b1.getType() == Ball::CUE && !touchedABallThisShot) { // assuming CUE always has smaller id.
+        touchedABallThisShot = true;
+        if(colorsChosen) {
+            if((currentPlayer == 0 && b2.getType() != p1Color)
+               || (currentPlayer == 1 && (b2.getType() == p1Color || b2.getType() == Ball::EIGHT)))
+                faultThisShot = true;
+        }
+    }
 }
 
 void applyAnimation(Ball& ball, float deltaT) {
