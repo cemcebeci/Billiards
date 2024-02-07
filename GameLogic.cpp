@@ -77,11 +77,11 @@ void GameLogic::handle8Pocket(int pocketingPlayer) {
             balls[i].getType() != Ball::CUE ||
             balls[i].getType() != Ball::EIGHT)
         ) {
-            winner = 1;
+            winner = 0;
             return;
         }
     }
-    winner = 0;
+    winner = 1;
     return;
 }
 
@@ -125,7 +125,7 @@ void GameLogic::checkWhetherAnyBallsGoIn() {
 }
 
 void GameLogic::updateGame(Input input) {
-    if(aiming) {
+    if(aiming && winner == -1) {
         if(!charging) {
             if(input.fire) { // started charging.
                 chargeTime = 0.0f;
@@ -151,7 +151,7 @@ void GameLogic::updateGame(Input input) {
     } else {
         checkWhetherAnyBallsGoIn();
         computeFrame(input.deltaT);
-        if( allBallsAreStill()) {
+        if( allBallsAreStill() && winner == -1) {
             // finished pyhsics simulation
             if ( !scoredThisShot || faultThisShot) {
                 currentPlayer = 1 - currentPlayer;
