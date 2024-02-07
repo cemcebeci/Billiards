@@ -9,7 +9,7 @@
 #include "Input.hpp"
 
 const int NUM_BALLS = 16;
-const float BALL_HEIGHT = 0.0f;
+const float BALL_HEIGHT = 0.5f;
 const float BALL_SCALE = 0.4;
 const float FRICTION_FACTOR = 1;
 const float HIT_STRENGTH = 5.0f;

@@ -192,7 +192,7 @@ protected:
         // The third parameter is the file name
         // The last is a constant specifying the file type: currently only OBJ or GLTF
         
-        MTable.init(this, &VD, "models/billiardtable-TurboSquid.obj", OBJ);
+        MTable.init(this, &VD, "models/pool_table.obj", OBJ);
         for (auto &ball : balls) {
             ball.model.init(this, &VD, "Models/ball.obj", OBJ);
         }
@@ -238,7 +238,7 @@ protected:
         // Create the textures
         // The second parameter is the file name
         TPointer.init(this,   "textures/ball_8.png");
-        TFurniture.init(this, "textures/Table.png");
+        TFurniture.init(this, "textures/pool_table.png");
         TStick.init(this, "textures/BilliardStick_DefaultMaterial_AlbedoTransparency.png");
         int id = 0;
         for (auto &ball : balls) {
@@ -475,8 +475,8 @@ protected:
 		// the second parameter is the pointer to the C++ data structure to transfer to the GPU
 		// the third parameter is its size
 		// the fourth parameter is the location inside the descriptor set of this uniform block
-        World = glm::translate(glm::mat4(1), glm::vec3(0, -1, 0)) * // Table
-                glm::scale(glm::mat4(1), glm::vec3(7.0f));
+        World = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0)) * // Table
+                glm::scale(glm::mat4(1), glm::vec3(11.0f));
         uboTable.mvpMat = ViewProjection * World;
         uboTable.wMat = World;
         uboTable.nMat = glm::inverse(glm::transpose(World));
