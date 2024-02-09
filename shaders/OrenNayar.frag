@@ -43,7 +43,7 @@ vec3 BRDF(vec3 V, vec3 N, vec3 L, vec3 Md, float sigma) {
 
 const float beta = 2.0f;
 const float g = 5.0f;
-const float cosout = 0.7;
+const float cosout = 0.5;
 const float cosin  = 0.8;
 
 void main() {

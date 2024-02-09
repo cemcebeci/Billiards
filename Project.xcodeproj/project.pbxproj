@@ -458,6 +458,8 @@
 		E8CA12B52B714274007DA52C /* BilliardStick_DefaultMaterial_AlbedoTransparency.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BilliardStick_DefaultMaterial_AlbedoTransparency.png; sourceTree = "<group>"; };
 		E8CA12B82B714553007DA52C /* stick.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = stick.obj; sourceTree = "<group>"; };
 		E8CA12B92B718449007DA52C /* OrenNayar.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = OrenNayar.frag; sourceTree = "<group>"; };
+		E8CB8EE32B741DA300D8B78B /* pool_table.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = pool_table.obj; sourceTree = "<group>"; };
+		E8CB8EE42B741DD300D8B78B /* pool_table.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pool_table.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -516,6 +518,7 @@
 		E887AFB72B56DCE800A1C372 /* textures */ = {
 			isa = PBXGroup;
 			children = (
+				E8CB8EE42B741DD300D8B78B /* pool_table.png */,
 				E84FC4D12B72804E00746484 /* Hit_solids.png */,
 				E84FC4D22B72804E00746484 /* Hit_stripes.png */,
 				E84FC4D32B72804E00746484 /* Player_1_win.png */,
@@ -977,6 +980,7 @@
 		E887B1372B56DCEB00A1C372 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				E8CB8EE32B741DA300D8B78B /* pool_table.obj */,
 				E8CA12B82B714553007DA52C /* stick.obj */,
 				E87C74762B60096600146B4B /* billiardtable-TurboSquid.obj */,
 				E87C747E2B6015B500146B4B /* ball.obj */,
