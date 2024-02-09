@@ -54,6 +54,7 @@
 		E80DD33A2B699F770006E0A4 /* ball_15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball_15.png; sourceTree = "<group>"; };
 		E80DD33B2B69A0110006E0A4 /* ball_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball_0.png; sourceTree = "<group>"; };
 		E80DD33D2B69A33B0006E0A4 /* ball_11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball_11.png; sourceTree = "<group>"; };
+		E81B4B8B2B764815008E610F /* pool_table.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = pool_table.obj; sourceTree = "<group>"; };
 		E82228D72B50523F005E7203 /* Project */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Project; sourceTree = BUILT_PRODUCTS_DIR; };
 		E82228E22B505343005E7203 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		E82228E42B505366005E7203 /* libvulkan.1.3.239.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvulkan.1.3.239.dylib; path = ../../VulkanSDK/1.3.239.0/macOS/lib/libvulkan.1.3.239.dylib; sourceTree = "<group>"; };
@@ -458,7 +459,6 @@
 		E8CA12B52B714274007DA52C /* BilliardStick_DefaultMaterial_AlbedoTransparency.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BilliardStick_DefaultMaterial_AlbedoTransparency.png; sourceTree = "<group>"; };
 		E8CA12B82B714553007DA52C /* stick.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = stick.obj; sourceTree = "<group>"; };
 		E8CA12B92B718449007DA52C /* OrenNayar.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = OrenNayar.frag; sourceTree = "<group>"; };
-		E8CB8EE32B741DA300D8B78B /* pool_table.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = pool_table.obj; sourceTree = "<group>"; };
 		E8CB8EE42B741DD300D8B78B /* pool_table.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pool_table.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -980,7 +980,7 @@
 		E887B1372B56DCEB00A1C372 /* models */ = {
 			isa = PBXGroup;
 			children = (
-				E8CB8EE32B741DA300D8B78B /* pool_table.obj */,
+				E81B4B8B2B764815008E610F /* pool_table.obj */,
 				E8CA12B82B714553007DA52C /* stick.obj */,
 				E87C74762B60096600146B4B /* billiardtable-TurboSquid.obj */,
 				E87C747E2B6015B500146B4B /* ball.obj */,
