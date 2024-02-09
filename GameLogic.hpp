@@ -12,10 +12,10 @@ const int NUM_BALLS = 16;
 const float BALL_HEIGHT = 0.5f;
 const float BALL_SCALE = 0.4;
 const float FRICTION_FACTOR = 1;
-const float HIT_STRENGTH = 5.0f;
-const float ROTATE_SPEED = 1.0f;
+const float HIT_STRENGTH = 7.5f;
+const float ROTATE_SPEED = 90.0f;
 const float ARROW_DISTANCE = 0.5f;
-const float ARROW_ELONGATE_FACTOR = 0.5f;
+const float ARROW_ELONGATE_FACTOR = 1.0f;
 
 struct Hole
 {
@@ -77,7 +77,7 @@ private:
     bool charging = false;
     bool aiming = true;
     float direction = 0.0f;
-    float chargeTime;
+    float chargeTime = 0.0f;
     int currentPlayer = 0;
     bool scoredThisShot = false;
     bool faultThisShot = false;

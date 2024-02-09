@@ -131,7 +131,7 @@ void GameLogic::updateGame(Input input) {
                 chargeTime = 0.0f;
                 charging = true;
             } else { // picking direction.
-                direction -=  input.r.z + input.deltaT * ROTATE_SPEED;
+                direction -=  input.r.z * input.deltaT * ROTATE_SPEED;
                 if (direction > 360.0f)
                     direction -= 360.0f;
                 if(direction < 0.0f)
