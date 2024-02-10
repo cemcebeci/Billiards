@@ -54,7 +54,7 @@ struct BallObject {
 };
 
 // MAIN ! 
-class MeshLoader : public BaseProject {
+class Billiards : public BaseProject {
 protected:
     
     // Descriptor Layouts ["classes" of what will be passed to the shaders]
@@ -93,7 +93,7 @@ protected:
         // window size, titile and initial background
         windowWidth = 800;
         windowHeight = 600;
-        windowTitle = "Mesh Loader";
+        windowTitle = "Billiards";
         windowResizable = GLFW_FALSE;
         initialBackgroundColor = {0.0f, 0.005f, 0.01f, 1.0f};
         
@@ -551,7 +551,7 @@ protected:
 
 // This is the main: probably you do not need to touch this!
 int main() {
-    MeshLoader app;
+    Billiards app;
 
     try {
         app.run();

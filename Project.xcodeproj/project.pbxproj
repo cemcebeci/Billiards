@@ -16,7 +16,7 @@
 		E828E2F62B5834E000F5A42D /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E828E2F42B5834E000F5A42D /* Camera.cpp */; };
 		E828E2FB2B59979B00F5A42D /* GameLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E828E2FA2B59979B00F5A42D /* GameLogic.cpp */; };
 		E887B1422B56DCEC00A1C372 /* glm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E887B0792B56DCEA00A1C372 /* glm.cpp */; };
-		E887B1432B56DCEC00A1C372 /* MeshLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E887B1412B56DCEC00A1C372 /* MeshLoader.cpp */; };
+		E887B1432B56DCEC00A1C372 /* Billiards.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E887B1412B56DCEC00A1C372 /* Billiards.cpp */; };
 		E887B1472B56ED0500A1C372 /* Ball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E887B1462B56ED0500A1C372 /* Ball.cpp */; };
 /* End PBXBuildFile section */
 
@@ -72,7 +72,6 @@
 		E85856ED2B683C4600EA3D79 /* Overlay.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Overlay.frag; sourceTree = "<group>"; };
 		E85856EE2B683C4600EA3D79 /* OverlayFrag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = OverlayFrag.spv; sourceTree = "<group>"; };
 		E85856EF2B683C4600EA3D79 /* Overlay.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Overlay.vert; sourceTree = "<group>"; };
-		E87C74752B60087C00146B4B /* Cube_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cube_color.png; sourceTree = "<group>"; };
 		E87C74762B60096600146B4B /* billiardtable-TurboSquid.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "billiardtable-TurboSquid.obj"; sourceTree = "<group>"; };
 		E87C74772B60096600146B4B /* Table.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Table.png; sourceTree = "<group>"; };
 		E87C747A2B60126C00146B4B /* ball_8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball_8.png; sourceTree = "<group>"; };
@@ -454,7 +453,7 @@
 		E887B13B2B56DCEB00A1C372 /* Starter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Starter.hpp; sourceTree = "<group>"; };
 		E887B13D2B56DCEC00A1C372 /* Blinn.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Blinn.vert; sourceTree = "<group>"; };
 		E887B13F2B56DCEC00A1C372 /* Blinn.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Blinn.frag; sourceTree = "<group>"; };
-		E887B1412B56DCEC00A1C372 /* MeshLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshLoader.cpp; sourceTree = "<group>"; };
+		E887B1412B56DCEC00A1C372 /* Billiards.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Billiards.cpp; sourceTree = "<group>"; };
 		E887B1462B56ED0500A1C372 /* Ball.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Ball.cpp; sourceTree = "<group>"; };
 		E8CA12B52B714274007DA52C /* BilliardStick_DefaultMaterial_AlbedoTransparency.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BilliardStick_DefaultMaterial_AlbedoTransparency.png; sourceTree = "<group>"; };
 		E8CA12B82B714553007DA52C /* stick.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = stick.obj; sourceTree = "<group>"; };
@@ -486,8 +485,7 @@
 				E828E2F82B5991EE00F5A42D /* Camera.hpp */,
 				E887B1462B56ED0500A1C372 /* Ball.cpp */,
 				E887AFBA2B56DCEA00A1C372 /* headers */,
-				E887B1412B56DCEC00A1C372 /* MeshLoader.cpp */,
-				E87C74752B60087C00146B4B /* Cube_color.png */,
+				E887B1412B56DCEC00A1C372 /* Billiards.cpp */,
 				E887B1372B56DCEB00A1C372 /* models */,
 				E887B13C2B56DCEC00A1C372 /* shaders */,
 				E887B13B2B56DCEB00A1C372 /* Starter.hpp */,
@@ -1061,7 +1059,7 @@
 			files = (
 				E828E2F62B5834E000F5A42D /* Camera.cpp in Sources */,
 				E887B1472B56ED0500A1C372 /* Ball.cpp in Sources */,
-				E887B1432B56DCEC00A1C372 /* MeshLoader.cpp in Sources */,
+				E887B1432B56DCEC00A1C372 /* Billiards.cpp in Sources */,
 				E828E2FB2B59979B00F5A42D /* GameLogic.cpp in Sources */,
 				E887B1422B56DCEC00A1C372 /* glm.cpp in Sources */,
 			);

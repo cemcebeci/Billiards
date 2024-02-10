@@ -87,7 +87,7 @@ private:
     bool firstShot = true;
     
     Ball::BallType p1Color;
-    bool colorsChosen;
+    bool colorsChosen = false;
     
     void computeFrame(float deltaT);
     bool allBallsAreStill();
