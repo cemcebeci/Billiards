@@ -13,6 +13,8 @@ struct Camera {
     float pitch;
     float yaw;
     float aspectRatio;
+    glm::vec3 target;
+    bool focusOnTarget;
 };
 void updateCamera(Camera &camera, Input &input);
 glm::mat4 computeViewProjectionMatrix(Camera &camera);
