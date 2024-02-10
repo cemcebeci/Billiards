@@ -457,14 +457,19 @@ protected:
         updateCamera(camera, input);
         gameLogic.updateGame(input);
         
-        camera.focusOnTarget = true;
-        auto cueBallPos = gameLogic.getBall(0).position;
-        // this makes some abstractions useless but so be it;
-        camera.target = glm::vec3(cueBallPos.x / 2, BALL_HEIGHT, - cueBallPos.y / 2);
-        auto offset = glm::rotate(glm::mat4(1),  glm::radians(gameLogic.direction), glm::vec3(0,1,0))
-                    * glm::rotate(glm::mat4(1), camera.pitch, glm::vec3(0,0,1))
-                    * glm::vec4(-4,0,0,1);
-        camera.position = camera.target + glm::vec3(offset.x, offset.y, offset.z) / offset.w;
+        if(gameLogic.aiming) {
+            camera.focusOnTarget = true;
+            auto cueBallPos = gameLogic.getBall(0).position;
+            // this makes some abstractions useless but so be it;
+            camera.target = glm::vec3(cueBallPos.x / 2, BALL_HEIGHT, - cueBallPos.y / 2);
+            auto offset = glm::rotate(glm::mat4(1),  glm::radians(gameLogic.direction), glm::vec3(0,1,0))
+            * glm::rotate(glm::mat4(1), camera.pitch, glm::vec3(0,0,1))
+            * glm::vec4(-4,0,0,1);
+            camera.position = camera.target + glm::vec3(offset.x, offset.y, offset.z) / offset.w;
+        } else {
+            camera.target = glm::vec3(0,0,1);
+            camera.position = glm::vec3(0,10,2);
+        }
         
 		// getSixAxis() is defined in Starter.hpp in the base class.
 		// It fills the float point variable passed in its first parameter with the time

@@ -70,14 +70,14 @@ public:
     }
     int getWinner() {return winner;}
     
-    float direction = 0.0f;
+    float direction = 90.0f;
+    bool aiming = true;
     
     
 private:
     Ball balls[NUM_BALLS];
     Hole holes[6];
     bool charging = false;
-    bool aiming = true;
     float chargeTime = 0.0f;
     int currentPlayer = 0;
     bool scoredThisShot = false;
