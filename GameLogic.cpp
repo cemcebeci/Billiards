@@ -323,6 +323,8 @@ void GameLogic::setRandomBallVelocities() {
 }
 
 glm::mat4 GameLogic::pointerWorldMatrix() {
+    return glm::scale(glm::mat4(1), glm::vec3(0,0,0));
+    
     auto hole = holes[1];
     
     return glm::translate(glm::mat4(1), glm::vec3(hole.position.x / 2, BALL_HEIGHT, -hole.position.y / 2))
