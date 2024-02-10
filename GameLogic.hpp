@@ -72,6 +72,8 @@ public:
     
     float direction = 90.0f;
     bool aiming = true;
+    Ball::BallType p1Color;
+    bool colorsChosen = false;
     
     
 private:
@@ -85,9 +87,6 @@ private:
     bool touchedABallThisShot = false;
     int winner = -1;
     bool firstShot = true;
-    
-    Ball::BallType p1Color;
-    bool colorsChosen = false;
     
     void computeFrame(float deltaT);
     bool allBallsAreStill();

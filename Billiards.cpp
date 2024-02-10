@@ -73,15 +73,15 @@ protected:
     // Please note that Model objects depends on the corresponding vertex structure
     // Models
     Model<Vertex> MTable, MStick, MPointer;
-    Model<VertexOverlay> MP1Turn, MP2Turn, MP1Win, MP2Win, MHitStripes, MHitSolids;
+    Model<VertexOverlay> MP1Turn, MP2Turn, MP1Win, MP2Win, MP1HitsStripes, MP1HitsSolids;
     // Descriptor sets
-    DescriptorSet DSTable, DSStick, DSPointer, DSP1Turn, DSP2Turn, DSP1Win, DSP2Win, DSHitStripes, DSHitSolids, DSLighting;
+    DescriptorSet DSTable, DSStick, DSPointer, DSP1Turn, DSP2Turn, DSP1Win, DSP2Win, DSP1HitsStripes, DSP1HitsSolids, DSLighting;
     // Textures
-    Texture TPointer, TFurniture, TP1Turn, TP2Turn, TP1Win, TP2Win, THitStripes, THitSolids, TStick;
+    Texture TPointer, TFurniture, TP1Turn, TP2Turn, TP1Win, TP2Win, TP1HitsStripes, TP1HitsSolids, TStick;
     
     // C++ storage for uniform variables
     UniformBlock uboTable, uboStick, uboPointer;
-    OverlayUniformBlock uboP1Turn, uboP2Turn, uboP1Win, uboP2Win, uboHitSolids, uboHitStripes;
+    OverlayUniformBlock uboP1Turn, uboP2Turn, uboP1Win, uboP2Win, uboP1HitsSolids, uboP1HitsStripes;
     SpotlightUniformBufferObject uboLighting;
     
     // Other application parameters
@@ -200,38 +200,38 @@ protected:
         MPointer.init(this, &VD, "models/ball.obj", OBJ);
         
         auto margin = 0.05f;
-        MP1Turn.vertices = {{{0 - margin, -1 + margin}, {0.0f, 0.0f}}, {{0 - margin, -0.82 + margin}, {0.0f,1.0f}},
-                         {{ 1.0f - margin, -1 + margin}, {1.0f,0.0f}}, {{ 1.0f - margin, -0.82 + margin}, {1.0f,1.0f}}};
+        MP1Turn.vertices = {{{0.4f, -1 }, {0.0f, 0.0f}}, {{0.4, -0.4}, {0.0f,1.0f}},
+                         {{ 1.0f , -1 }, {1.0f,0.0f}}, {{ 1.0f, -0.4}, {1.0f,1.0f}}};
         MP1Turn.indices = {0, 1, 2,    1, 3, 2};
         MP1Turn.initMesh(this, &VD);
         
-        MP2Turn.vertices = {{{0 - margin, -1 + margin}, {0.0f, 0.0f}}, {{0 - margin, -0.82 + margin}, {0.0f,1.0f}},
-                         {{ 1.0f - margin, -1 + margin}, {1.0f,0.0f}}, {{ 1.0f - margin, -0.82 + margin}, {1.0f,1.0f}}};
+        MP2Turn.vertices = {{{0.4f, -1 }, {0.0f, 0.0f}}, {{0.4, -0.4}, {0.0f,1.0f}},
+            {{ 1.0f , -1 }, {1.0f,0.0f}}, {{ 1.0f, -0.4}, {1.0f,1.0f}}};
         MP2Turn.indices = {0, 1, 2,    1, 3, 2};
         MP2Turn.initMesh(this, &VD);
         
         auto length = 0.6;
         auto height = 0.2;
         
-        MP1Win.vertices = {{{-length, -height}, {0.0f, 0.0f}}, {{-length, +height}, {0.0f,1.0f}},
-                         {{ +length, - height}, {1.0f,0.0f}}, {{ +length, +height}, {1.0f,1.0f}}};
+        MP1Win.vertices = {{{-1, -1}, {0.0f, 0.0f}}, {{-1, +1}, {0.0f,1.0f}},
+                         {{ +1, -1}, {1.0f,0.0f}}, {{ +1, +1}, {1.0f,1.0f}}};
         MP1Win.indices = {0, 1, 2,    1, 3, 2};
         MP1Win.initMesh(this, &VD);
         
-        MP2Win.vertices = {{{-length, -height}, {0.0f, 0.0f}}, {{-length, +height}, {0.0f,1.0f}},
-                         {{ +length, - height}, {1.0f,0.0f}}, {{ +length, +height}, {1.0f,1.0f}}};
+        MP2Win.vertices = {{{-1, -1}, {0.0f, 0.0f}}, {{-1, +1}, {0.0f,1.0f}},
+                         {{ +1, - 1}, {1.0f,0.0f}}, {{ +1, +1}, {1.0f,1.0f}}};
         MP2Win.indices = {0, 1, 2,    1, 3, 2};
         MP2Win.initMesh(this, &VD);
         
-        MHitSolids.vertices = {{{0.5 - margin, -0.82 + margin + margin}, {0.0f, 0.0f}}, {{ 0.5 - margin, -0.82 + margin + margin + 0.10}, {0.0f,1.0f}},
-                        {{1.0f -  margin, -0.82 + margin + margin}, {1.0f,0.0f}}, {{ 1.0f - margin, -0.82 + margin + margin + 0.10}, {1.0f,1.0f}}};
-        MHitSolids.indices = {0, 1, 2,    1, 3, 2};
-        MHitSolids.initMesh(this, &VD);
+        MP1HitsSolids.vertices = {{{0.4f, -1 }, {0.0f, 0.0f}}, {{0.4, -0.4}, {0.0f,1.0f}},
+            {{ 1.0f , -1 }, {1.0f,0.0f}}, {{ 1.0f, -0.4}, {1.0f,1.0f}}};
+        MP1HitsSolids.indices = {0, 1, 2,    1, 3, 2};
+        MP1HitsSolids.initMesh(this, &VD);
         
-        MHitStripes.vertices = {{{0.5 - margin, -0.82 + margin + margin}, {0.0f, 0.0f}}, {{ 0.5 - margin, -0.82 + margin + margin + 0.14}, {0.0f,1.0f}},
-            {{1.0f -  margin, -0.82 + margin + margin}, {1.0f,0.0f}}, {{ 1.0f - margin, -0.82 + margin + margin + 0.14}, {1.0f,1.0f}}};
-        MHitStripes.indices = {0, 1, 2,    1, 3, 2};
-        MHitStripes.initMesh(this, &VD);
+        MP1HitsStripes.vertices = {{{0.4f, -1 }, {0.0f, 0.0f}}, {{0.4, -0.4}, {0.0f,1.0f}},
+            {{ 1.0f , -1 }, {1.0f,0.0f}}, {{ 1.0f, -0.4}, {1.0f,1.0f}}};
+        MP1HitsStripes.indices = {0, 1, 2,    1, 3, 2};
+        MP1HitsStripes.initMesh(this, &VD);
         
 
         
@@ -245,12 +245,12 @@ protected:
             std::string path = "textures/ball_" + std::to_string(id++) + ".png";
             ball.tex.init(this, path.data());
         }
-        TP1Turn.init(this,"textures/Player_1_turn.png");
-        TP2Turn.init(this,"textures/Player_2_turn.png");
+        TP1Turn.init(this,"textures/P1_turn.png");
+        TP2Turn.init(this,"textures/P2_turn.png");
         TP1Win.init(this, "textures/Player_1_win.png");
         TP2Win.init(this, "textures/Player_2_win.png");
-        THitSolids.init(this, "textures/Hit_solids.png");
-        THitStripes.init(this, "textures/Hit_stripes.png");
+        TP1HitsSolids.init(this, "textures/P1_hits_solids.png");
+        TP1HitsStripes.init(this, "textures/P1_hits_stripes.png");
 
         
         // Init local variables
@@ -294,13 +294,13 @@ protected:
             {0, UNIFORM, sizeof(OverlayUniformBlock), nullptr},
             {1, TEXTURE, 0, &TP2Win}
         });
-        DSHitSolids.init(this, &DSL, {
+        DSP1HitsSolids.init(this, &DSL, {
             {0, UNIFORM, sizeof(OverlayUniformBlock), nullptr},
-            {1, TEXTURE, 0, &THitSolids}
+            {1, TEXTURE, 0, &TP1HitsSolids}
         });
-        DSHitStripes.init(this, &DSL, {
+        DSP1HitsStripes.init(this, &DSL, {
             {0, UNIFORM, sizeof(OverlayUniformBlock), nullptr},
-            {1, TEXTURE, 0, &THitStripes}
+            {1, TEXTURE, 0, &TP1HitsStripes}
         });
         
         for(auto &ball : balls) {
@@ -331,8 +331,8 @@ protected:
         DSP2Turn.cleanup();
         DSP1Win.cleanup();
         DSP2Win.cleanup();
-        DSHitSolids.cleanup();
-        DSHitStripes.cleanup();
+        DSP1HitsSolids.cleanup();
+        DSP1HitsStripes.cleanup();
         DSLighting.cleanup();
         
         for(auto &ball : balls) {
@@ -360,8 +360,8 @@ protected:
         MP2Turn.cleanup();
         MP1Win.cleanup();
         MP2Win.cleanup();
-        MHitSolids.cleanup();
-        MHitStripes.cleanup();
+        MP1HitsSolids.cleanup();
+        MP1HitsStripes.cleanup();
         
         for(auto &ball : balls) {
             ball.model.cleanup();
@@ -433,13 +433,13 @@ protected:
         MP2Win.bind(commandBuffer);
         vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MP2Win.indices.size()), 1, 0, 0, 0);
         
-        DSHitSolids.bind(commandBuffer, POverlay, 0, currentImage);
-        MHitSolids.bind(commandBuffer);
-        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MHitSolids.indices.size()), 1, 0, 0, 0);
+        DSP1HitsSolids.bind(commandBuffer, POverlay, 0, currentImage);
+        MP1HitsSolids.bind(commandBuffer);
+        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MP1HitsSolids.indices.size()), 1, 0, 0, 0);
         
-        DSHitStripes.bind(commandBuffer, POverlay, 0, currentImage);
-        MHitStripes.bind(commandBuffer);
-        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MHitStripes.indices.size()), 1, 0, 0, 0);
+        DSP1HitsStripes.bind(commandBuffer, POverlay, 0, currentImage);
+        MP1HitsStripes.bind(commandBuffer);
+        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(MP1HitsStripes.indices.size()), 1, 0, 0, 0);
         
 	}
 
@@ -534,11 +534,11 @@ protected:
         uboP2Win.visible = (gameLogic.getWinner() == 1) ? 1.0f : 0.0f;
         DSP2Win.map(currentImage, &uboP2Win, sizeof(uboP2Win), 0);
         
-        uboHitSolids.visible = (gameLogic.getTargetType() == Ball::FULL) ? 1.0f : 0.0f;
-        DSHitSolids.map(currentImage, &uboHitSolids, sizeof(uboHitSolids), 0);
+        uboP1HitsSolids.visible = (gameLogic.colorsChosen and gameLogic.p1Color == Ball::FULL) ? 1.0f : 0.0f;
+        DSP1HitsSolids.map(currentImage, &uboP1HitsSolids, sizeof(uboP1HitsSolids), 0);
         
-        uboHitStripes.visible = (gameLogic.getTargetType() == Ball::STRIPE) ? 1.0f : 0.0f;
-        DSHitStripes.map(currentImage, &uboHitStripes, sizeof(uboHitStripes), 0);
+        uboP1HitsStripes.visible = (gameLogic.colorsChosen and gameLogic.p1Color == Ball::STRIPE) ? 1.0f : 0.0f;
+        DSP1HitsStripes.map(currentImage, &uboP1HitsStripes, sizeof(uboP1HitsStripes), 0);
         
         uboLighting.lightPos = glm::vec3(0, 10, 0);
         uboLighting.lightColor = glm::vec4(1, 1, 1, 1);
