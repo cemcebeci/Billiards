@@ -15,6 +15,9 @@ struct Camera {
     float aspectRatio;
     glm::vec3 target;
     bool focusOnTarget;
+    
+    glm::vec3 dampedPosition;
+    glm::vec3 dampedTarget;
 };
 void updateCamera(Camera &camera, Input &input);
 glm::mat4 computeViewProjectionMatrix(Camera &camera);

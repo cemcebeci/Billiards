@@ -467,8 +467,13 @@ protected:
             * glm::vec4(-4,0,0,1);
             camera.position = camera.target + glm::vec3(offset.x, offset.y, offset.z) / offset.w;
         } else {
-            camera.target = glm::vec3(0,0,1);
-            camera.position = glm::vec3(0,10,2);
+            if(gameLogic.direction >= 0 and gameLogic.direction < 180) {
+                camera.target = glm::vec3(0,0,1);
+                camera.position = glm::vec3(0,10,2);
+            } else {
+                camera.target = glm::vec3(0,0,-1);
+                camera.position = glm::vec3(0,10,-2);
+            }
         }
         
 		// getSixAxis() is defined in Starter.hpp in the base class.

@@ -7,6 +7,7 @@ void initCamera(Camera &camera) {
     camera.roll = 0;
     camera.pitch = glm::radians(-30.0f);
     camera.yaw = 0;
+    camera.dampedPosition = camera.position;
 }
 
 void updateCamera(Camera &camera, Input &input) {
@@ -27,6 +28,10 @@ void updateCamera(Camera &camera, Input &input) {
     if(camera.pitch > 0.0f) camera.pitch = 0.0f;
     if(camera.pitch < glm::radians(-75.0f)) camera.pitch =glm::radians( -75.0);
     // camera.yaw -= input.r.y * CAMERA_ROTATE_SPEED * input.deltaT;
+    
+    float dampingTerm = pow(2.7, -10 * input.deltaT);
+    camera.dampedTarget = camera.dampedTarget * dampingTerm + camera.target * (1 - dampingTerm);
+    camera.dampedPosition = camera.dampedPosition * dampingTerm + camera.position * (1 - dampingTerm);
 }
 
 glm::mat4 projection(Camera &camera) {
@@ -47,7 +52,7 @@ glm::mat4 lookInDirection( float Alpha, float Beta, float Rho, glm::vec3 Pos) {
 }
 
 glm::mat4 lookAt(Camera &camera, glm::vec3 upVector = glm::vec3(0,1,0)) {
-    return glm::lookAt(camera.position, camera.target, upVector);
+    return glm::lookAt(camera.dampedPosition, camera.dampedTarget, upVector);
 }
 
 glm::mat4 view(Camera &camera) {
